@@ -1,0 +1,16 @@
+body {
+    background: #e6c5c5;
+background: radial-gradient(circle, rgba(230, 197, 197, 1) 0%, rgba(188, 247, 247, 1) 100%);
+}
+
+h1, h2, p {
+    text-align: center;
+    color: #000000;
+    font-family: "Playfair Display", serif;
+
+}
+
+h2 {
+    font-family: "Dancing Script", cursive;
+    font-size: 40px;
+}
