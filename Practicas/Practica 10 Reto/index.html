@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collage Estilo Boda</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center/cover;
+      /* 🔹 Fondo del mar (puedes cambiarlo por otro) */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .collage {
+      position: relative;
+      width: 1000px;
+      max-width: 95%;
+      height: 650px;
+    }
+
+    .photo {
+      position: absolute;
+      width: 220px;
+      height: 280px;
+      background: #fff;
+      padding: 6px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transform: rotate(var(--rotate));
+      transition: transform 0.3s ease;
+    }
+
+    .photo:hover {
+      transform: rotate(var(--rotate)) scale(1.05);
+      z-index: 10;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    /* Cinta adhesiva */
+    .photo::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 20px;
+      background: rgba(255, 255, 200, 0.9);
+      border-radius: 3px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Texto en medio */
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 2.5rem;
+      font-family: 'Brush Script MT', cursive;
+      color: #fff;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+      z-index: 5;
+    }
+
+    .date {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      padding: 6px 18px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      display: inline-block;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="collage">
+    <!-- Fotos distribuidas como en tu ejemplo -->
+    <div class="photo" style="--rotate:-4deg; top:20px; left:60px;">
+      <img src="Dustin.jpg" alt="Foto 1">
+    </div>
+    <div class="photo" style="--rotate:3deg; top:10px; left:320px;">
+      <img src="Milka.jpg" alt="Foto 2">
+    </div>
+    <div class="photo" style="--rotate:-6deg; top:30px; left:580px;">
+      <img src="Milka y Sucker.jpg" alt="Foto 3">
+    </div>
+    <div class="photo" style="--rotate:5deg; top:220px; left:700px;">
+      <img src="Sucker.jpg" alt="Foto 4">
+    </div>
+    <div class="photo" style="--rotate:-3deg; top:220px; left:60px;">
+      <img src="Dustin 1.jpg" alt="Foto 5">
+    </div>
+    <div class="photo" style="--rotate:4deg; top:400px; left:250px;">
+      <img src="Milka 1.jpg" alt="Foto 6">
+    </div>
+    <div class="photo" style="--rotate:-5deg; top:400px; left:500px;">
+      <img src="Dustin 2.jpg" alt="Foto 7">
+    </div>
+    <div class="photo" style="--rotate:2deg; top:250px; left:380px;">
+      <img src="M and S.jpg" alt="Foto 8">
+    </div>
+
+    <!-- Texto central -->
+    <div class="center-text">
+      Siempre juntos
+      <div class="date">I love them</div>
+    </div>
+  </div>
+</body>
+</html>
