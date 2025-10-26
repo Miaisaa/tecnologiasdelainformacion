@@ -1,0 +1,16 @@
+:root {
+    color-scheme: light dark;
+}
+
+body {
+
+    color: light dark(#000000, #ffffff);
+    background-color: light dark8(#f4f4f4, #121212);
+    
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+}
