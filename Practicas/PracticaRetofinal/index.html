@@ -32,7 +32,14 @@
       --glass: rgba(255,255,255,0.6);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);font-family:Montserrat,system-ui,Arial;color:var(--deep);-webkit-font-smoothing:antialiased}
+    html, body {
+  min-height: 100vh;  /* asegura que ocupe al menos la altura total de la pantalla del dispositivo */
+  margin: 0;
+  background: linear-gradient(180deg, var(--bg) 0%, #fff 60%);
+  font-family: Montserrat, system-ui, Arial;
+  color: var(--deep);
+  -webkit-font-smoothing: antialiased;
+}
 
     /* Decorative header */
     .site-header{
