@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Casa del Waffle — Menú Digital (Edición Premium)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #btn-inicio {
+  position: fixed;       
+  bottom: 40px;          
+  right: 40px;           
+  padding: 12px 18px;    
+  font-size: 16px;       
+  background-color: #ff7f50; 
+  color: white;           
+  border: none;          
+  border-radius: 8px;    
+  cursor: pointer;       
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  transition: background 0.3s;
+  z-index: 1000;         
+}
+
+#btn-inicio:hover {
+  background-color: #ff6347; 
+}
+
+    :root{
+      --bg:#f7f3ef; --card:#fffaf6; --accent:#b94a36; --gold:#dca21a; --deep:#3e2721; --muted:#73635a;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);font-family:Montserrat,system-ui,Arial;color:var(--deep);-webkit-font-smoothing:antialiased}
+
+    /* Decorative header */
+    .site-header{
+      max-width:1180px;margin:28px auto;padding:28px;border-radius:16px;background:linear-gradient(120deg, rgba(217,151,120,0.06), rgba(220,162,26,0.03));box-shadow:0 30px 80px rgba(62,39,33,0.06);position:relative;overflow:hidden;
+    }
+    .branding{display:flex;align-items:center;gap:18px}
+    .logo-plate{width:86px;height:86px;border-radius:14px;background:linear-gradient(135deg,#ffd87a,#dca21a);display:grid;place-items:center;box-shadow:0 18px 40px rgba(220,162,26,0.12)}
+    .brand-title{font-family:Playfair Display, serif;font-size:1.9rem;margin:0}
+    .brand-sub{color:var(--muted);font-style:italic}
+
+    /* Animated ribbon */
+    .ribbon{position:absolute;right:-60px;top:-18px;width:380px;height:220px;background:linear-gradient(90deg,rgba(185,74,60,0.12),rgba(220,162,26,0.12));transform:rotate(12deg);border-radius:18px;filter:blur(6px);opacity:.9}
+
+    /* Intro / presentation panel */
+    .intro{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:center;margin-top:18px}
+    .intro-left h1{font-family:Playfair Display,serif;font-size:2.4rem;margin:0 0 6px 0}
+    .intro-left p{color:var(--muted);font-size:1.02rem;font-style:italic}
+
+    /* Animated CTA buttons */
+    .cta-group{margin-top:12px;display:flex;gap:10px}
+    .btn-ghost{background:transparent;border:1px solid rgba(62,39,33,0.06);padding:.6rem .9rem;border-radius:12px;transition:transform .18s,box-shadow .18s}
+    .btn-ghost:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(62,39,33,0.08)}
+    .btn-prim{background:linear-gradient(90deg,var(--gold),var(--accent));color:white;border:0;padding:.6rem .95rem;border-radius:12px;box-shadow:0 12px 30px rgba(185,74,60,0.12)}
+
+    .intro-right{position:relative}
+    .intro-hero{width:100%;height:320px;border-radius:14px;object-fit:cover;box-shadow:0 30px 80px rgba(62,39,33,0.12);transform:translateY(0);transition:transform .9s cubic-bezier(.2,.9,.25,1)}
+    .intro-right:hover .intro-hero{transform:translateY(-10px) rotate(-1deg)}
+
+    /* Sections */
+    .section{max-width:1180px;margin:28px auto;padding:18px}
+    .section h2{font-family:Playfair Display,serif;font-size:1.6rem;margin-bottom:8px}
+    .section p.lead{color:var(--muted);font-style:italic}
+
+    /* Grid cards with glass effect */
+    .cards{display:grid;grid-template-columns:repeat(1,1fr);gap:16px}
+    @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}}
+
+    .plate-card{background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.85));border-radius:12px;overflow:hidden;border:1px solid rgba(62,39,33,0.04);box-shadow:0 18px 40px rgba(62,39,33,0.06);transition:transform .35s cubic-bezier(.2,.9,.2,1),box-shadow .35s}
+    .plate-card:hover{transform:translateY(-12px) rotate(-.6deg);box-shadow:0 40px 120px rgba(62,39,33,0.12)}
+    .plate-thumb{width:100%;height:190px;object-fit:cover;display:block}
+    .plate-body{padding:12px 14px}
+    .plate-title{font-weight:700;font-family:Playfair Display,serif}
+    .plate-desc{color:var(--muted);font-style:italic}
+    .plate-meta{display:flex;align-items:center;gap:8px;margin-top:8px}
+    .price-tag{background:linear-gradient(90deg,var(--gold),var(--accent));color:white;padding:.3rem .6rem;border-radius:999px;font-weight:800;box-shadow:0 8px 20px rgba(185,74,60,0.12)}
+
+    /* Decorative separators */
+    .sep{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:18px 0;border-radius:8px}
+
+    /* Floating side gallery */
+    .side-gallery{display:flex;flex-direction:column;gap:10px}
+    .side-thumb{width:100%;height:120px;object-fit:cover;border-radius:10px;border:1px solid rgba(62,39,33,0.03);box-shadow:0 10px 30px rgba(62,39,33,0.06)}
+
+    /* Full transcription list styling */
+    .trans-list{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.trans-list{grid-template-columns:1fr 1fr}}
+    .trans-list ul{padding:0;margin:0;list-style:none}
+    .trans-list li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dotted rgba(62,39,33,0.04);color:var(--muted)}
+
+    /* Advanced animations */
+    .stagger{opacity:0;transform:translateY(16px);animation:staggerIn .7s forwards}
+    .stagger.delay-1{animation-delay:.08s}
+    .stagger.delay-2{animation-delay:.16s}
+    .stagger.delay-3{animation-delay:.24s}
+    @keyframes staggerIn{to{opacity:1;transform:none}}
+
+    /* Footer */
+    footer{max-width:1180px;margin:28px auto;padding:12px;text-align:center;color:var(--muted)}
+  </style>
+</head>
+<body>
+
+  <div class="site-header">
+    <div class="ribbon" aria-hidden="true"></div>
+    <div class="branding">
+      <div class="logo-plate" aria-hidden="true">
+        <!-- simple waffle icon -->
+        <svg width="56" height="56" viewBox="0 0 64 64" xmlns="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPniWVHYlpjBoFYsbpYkUMEDRXmRiyQ-mApw&s"><rect width="64" height="64" rx="10" fill="url(#g)"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">La Casa del Waffle <span style="display:block;font-size:.95rem;color:var(--muted);font-style:italic">Menú digital — Edición concurso</span></div>
+      </div>
+    </div>
+
+    <div class="intro" style="margin-top:14px">
+      <div class="intro-left">
+        <h1>El sabor de León con estilo gourmet</h1>
+        <p class="lead">Una propuesta visual elegante que respeta tu menú físico y lo eleva con tipografía en cursiva, movimiento y animaciones sutiles. Navega o usa las secciones para explorar.</p>
+        <div class="cta-group">
+          <button class="btn-prim" onclick="document.getElementById('waffles').scrollIntoView({behavior:'smooth'})">Explorar Waffles</button>
+          <button class="btn-ghost" onclick="document.getElementById('bebidas').scrollIntoView({behavior:'smooth'})">Ver Bebidas</button>
+          <button id="btn-inicio" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Inicio</button>
+          <a href="https://www.instagram.com/lacasadelwaffle/" target="_blank">
+  <button class="btn-prim">Instagram</button>
+</a>
+
+        </div>
+        <div class="sep"></div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="width:8px;height:8px;border-radius:99px;background:var(--accent)"></div>
+          <div style="font-style:italic;color:var(--muted)">Fotos: versión real del menú — contenido verificado</div>
+        </div>
+      </div>
+
+      <div class="intro-right">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPniWVHYlpjBoFYsbpYkUMEDRXmRiyQ-mApw&s" alt="Hero Waffle" class="intro-hero">
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SECTIONS -->
+  <main class="section">
+
+    <!-- Waffles -->
+    <section id="waffles" class="stagger delay-1">
+      <h2>Waffles — Golden Belgian</h2>
+      <p class="lead">Servidos con adorno de fruta fresca y espolvoreados con azúcar glass.</p>
+      <div style="display:flex;gap:18px;margin-top:12px;">
+        <div style="flex:1">
+          <div class="cards">
+            <article class="plate-card">
+              <img class="plate-thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZKmT1CHQsX2EA3QToe15hvyXg5SmrNaZtsQ&s" alt="El Original">
+              <div class="plate-body">
+                <div class="plate-title">El Original <em style="font-style:italic;color:var(--muted)">120 g</em></div>
+                <div class="plate-desc">Nuestra receta original, doradito al natural</div>
+                <div class="plate-meta"><div style="color:var(--muted)">Tiempo aprox. 12 min</div><div class="price-tag">$109</div></div>
+              </div>
+            </article>
+
+            <article class="plate-card">
+              <img class="plate-thumb" src="https://media-cdn.tripadvisor.com/media/photo-s/15/6e/b2/43/photo3jpg.jpg" alt="Waffle Ferrero">
+              <div class="plate-body">
+                <div class="plate-title">Waffle Ferrero <em style="font-style:italic;color:var(--muted)">210 g</em></div>
+                <div class="plate-desc">Cubierto de crema de avellanas, queso crema y nuez</div>
+                <div class="plate-meta"><div style="color:var(--muted)">Favorito</div><div class="price-tag">$154</div></div>
+              </div>
+            </article>
+
+            <article class="plate-card">
+              <img class="plate-thumb" src="https://anfitrion.com.mx/wp-content/uploads/2022/07/281542061_7556412631096639_2402105715003198774_n.jpg" alt="Waffle Frutas">
+              <div class="plate-body">
+                <div class="plate-title">Waffle con Frutas <em style="font-style:italic;color:var(--muted)">430 g</em></div>
+                <div class="plate-desc">Cubierto con frutas de temporada y crema batida</div>
+                <div class="plate-meta"><div style="color:var(--muted)">Estacional</div><div class="price-tag">$135</div></div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <aside style="width:320px">
+          <div class="side-gallery">
+            <img class="side-thumb" src="https://wheretogovallarta.com/images/restaurantes/la-casa-del-waffle/images/la-casa-del-waffle-1.jpg" alt="thumb1">
+            <img class="side-thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPoj8idbclsK3UR9dNj1D4J5RM2RqgXGL2CQ&s" alt="thumb2">
+            <div style="background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.7));padding:12px;border-radius:10px;text-align:center;box-shadow:0 12px 30px rgba(62,39,33,0.06)">
+              <div style="font-weight:700">Promoción</div>
+              <div style="color:var(--muted);font-style:italic">Miércoles Retro: Waffle clásico + bebida $99</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- Hot Cakes -->
+    <section id="hotcakes" class="stagger delay-2">
+      <h2>Hot Cakes</h2>
+      <p class="lead">Espolvoreados con azúcar glass — jugosos y esponjosos.</p>
+      <div class="cards" style="margin-top:12px">
+        <article class="plate-card">
+          <img class="plate-thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYNwrYb8XJ1yW5W9kFY7D7ykEOSelNl4aznA&s" alt="Red Velvet">
+          <div class="plate-body">
+            <div class="plate-title">Red Velvet <em style="font-style:italic;color:var(--muted)">420 g</em></div>
+            <div class="plate-desc">Con glaseado de mantequilla y azúcar glass</div>
+            <div class="plate-meta"><div style="color:var(--muted)">Clásico</div><div class="price-tag">$149</div></div>
+          </div>
+        </article>
+
+        <article class="plate-card">
+          <img class="plate-thumb" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXFxcXFxcYFxcdFxkVFRUWFxUXGhgdHSggGholHRcVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0mICUtLS0rLS0tLS0tLS0tLS0wLS0tLS0tLS8tLS8tLS0tLS0tLS0tKy0tLTUtLS4tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAEAAIDBQYHAQj/xABEEAACAQIEAwUFBgMGBAcBAAABAhEAAwQSITEFQVEGImFxgRMykaGxQlLB0eHwBxRiFSNygtLxM0OSslNjZIOio+Il/8QAGgEAAgMBAQAAAAAAAAAAAAAAAgMBBAUABv/EAC0RAAICAQQBAwIGAgMAAAAAAAABAhEDBBIhMUETUWEUIgUycZHw8aHBM0Lh/9oADAMBAAIRAxEAPwCVanANDipEB8KwD05KFFMKjrTiPXyryPCoZKISAfGlEdBU0HrSKeHxNcgiAt6/Kma0Tl8oqOB4miSOI/P608W/CpUXwp6r1owWyILUqoOhr1sqgsYAGpJ0HxNEWFBQ3Dmy7gKpLHyBg0yEHLoXPJGP5mQhacB0FNwnE1LR/KXgJ95wx9cogD51bXQGEar/AIe4fisGrC08vJWlrI+EBLZY9altWyDEn9/OsrxvhxDEtkdeU37waJ0nM5FC4DjfD8MwNzC2r2usZWceTxB9aL6ZeWJerl4j/n/w3AaDFPUtV/2c7ccOxgFu3cVGiBZugK0AbAHutp90msz2zxpw965czKLRVRatgCfaeXxJ8Kn6d+GCtarqUaJ2Mbmojnb3NI3nkOsdPOKq+DY67fGdhkT7IHvNP2ifsr05+esW5JIjkNgNFHpzPiZPjXbIw/NywvVnl/JwvchuIPtMWPTceIIEAjxk+VRaaaERtrEeHdjTwM1MUpjrXeo+lwStPHuXL+SJXy+7p5AD6Ux7xp5So3ShfI5JLpDGc1C7U5rR61G1qOdLYdDWB61AwqY2z1phsDmaG0TRFSp/sh+5pVFkkqkVMLg6UCtyOdSqSeXxqpRYoKNz98q8L1FBr0p1Nc0SuCQNTWavQlSLa5mpRwxZ8KdkqYJTxb9KJENkC2zUq26lVB51Kg6CpsFnNu3eOuG/7LVUQKQNpJE5j16elVtvj2LA0xD/ABH5V0zjPAlvwxCh190kAg/0svNfpyrIcU4DbX/iYe5b/rsPKn/I8x5A1fwTTjSM7PCpWyhucaxh3v3fRiPpTLbYm4ffut/nY/jU+IwFlfdv3fJrDfVTFBuwXa+f+m4Pwp1sUooPXs1imE+wunxIP5UMeEMDBU/v0qBMZH/OceQP4sKIsPhz71zEt/gt2x8zcP0qLZ1JDMVw4oJDePiK3nB8J/O4S22JuuzyRbVYzZVJQZ2I02J6kAGqrgPZIYoqypcSwJl7rd9zGgCqYid2BHSukcP4bbsIEQaDbb6Coc9pDxepS8EOHsKihVXYAfARTypNEMfCmshNVnz2XEklSBmQeZqFko17cc6h9nUpnIGKionSiilMZetFZ1gTioHejXQVAydBQugkwJ2NNK0Rct0OU8aBsJIZlpV7pSobJohtzU6DxpKqipkZeQqtZYPUXwmpoPQCkHPKpUtcyYrjhgXrUltRUi2x0J8/yqdAfKoOsjCE+FPWyOevl+dSrbHiaIQVKAbB1tdAB56mpVt+J+n0qTLOxFOyCjSYNjMgpNakQRpz00qZdOVPAo0mA2YntX2RVrb3LPvgE5JOVo3jXQ1zC0+YgD2oJIACvOp20NfRSWq5V2e4OF429uO7ae5cA8IlPhnX4Vcx5HXJUyY43wF8F/h5dYTfulRGiqCX/wAzZsoPhBrV8K7EYe0QSrXDyNxpH/SNPjWnBp1dvkyNkV4I1s8voK8KAVI1C4rEZQDvryoWklbDinJ0j13HKh2cn9PzqfKCJHPWa8K1G1Epg+T9701lA5zRHs68KiuSObBSDyECo7lvrRpQ1G6R40VHJlebJ6VE4jnR11Z3od7R8qFoNMrr1B3RVnct0JdtDmKWxiAoFKisg6UqiwqGC2vjUyQOVRLb6kD1om1bHjVRD2x1sk/vSiFjw86aijp9amVJ5UVA2NUgDcfOnoZ/ZqRbXlUq2zUgtiRD1qVUmvUtzoPSKs8LwW62/dH9X5b0yEJS/KhOTLGPMmV3s/P1NPAHhWgscBtj3iW+Q/Oj7ODtr7qKPGNfiatQ0k32U562C65MxZsE7KzeQNG2+H3OSR5kfnWhBpr3AN6fHSRXbK8tZJ9Ip/7LuHcqPX8hWD4Pwlv7fxayJGHRidY73sR+FdCXj1kFhcJtFXVCH0Ga4AbcNsQwIjXfTes7wi3/AP3saf8A0tj5kf6aJYoeCFnyc2X39kP95fn+Vef2U/3l+f5VcGq/i2PFpZ+0fdHU/lRSxwirYMMuWclGPZUY0ez0MZvj86qMTJgzzG/XqB8qsuDYX2v97e1B2B+0Z1PlWgttbiAogcoHpVNpT7dexpfUR072pW/LMzgLkqQeXXpU0VZvglS+rjVWBRlIEBjqpHwj1ou9grO57nrp8DTYYpbf0EZdRDda6fJRZa8CxyonFIi+7eQ+ZAP5fOhQ8iRBHUER8qimjlOL6E3pUZFOzUxjUbQ7IbhMUMxohxQ12ocUGmD3loK8njRjioLi0uSodEEyilUmnjXlBTDtCt2vH4aVOgXpPzoa2w6j61MtzwJ+QqqkxrDEapUFCox8BRvDsA95oX1J90ef5U2MG3SFTkoq2OVuQ3OkAan61eYDgTGDcJUfd+168hVpw3hiWRpq3Njv6dBRk1oYtIlzMy82sb4h+4zDYVLY7qgePP41NNMmlNW1SVIottu2PpUDjuKWrMC44UtsNyfGBrHjU4xKkSCCPCu3K6snbKrrgffvhBJqCy+bXl9aq8DhCGv5xIe6bivzKsFAXqMsRG0RHQU3FLjYfFW7qviboKsv8ui5hGnfEQFEySW1Okc6Bza5DUE3SZp+JYG3fR7V1cyOACNRMagyNQZ5+Fc3s/3PFL1i5iRbt+xw6m4SQ7W0dmS1mnSRoW6LymtXY7VWXtXrgYzYUl0ZSlzugkA5oiSI0rNdieEZ+IXruJVbl02bF7UaI943TABnYAUDe58DYJwT3ft8nR7+Ot2rQZm7ugXWZJHdAJ3J5a61jMXj2v3JAkmAPCdAB61rHv27T2rOUgNIQhTkBQFss/ZMAkeVZjtSLdnEW7gAXMVJI0lg+v78ar63coWul2i3+GSipuNctcMuRiBaVUEHKoHqBrE0/D4hW7wgE9Pxqq4hgzckyYjSOtOwOHdAokQOX72rLWbJvprglwi43fIuJcSue1NvZQdPTmT86FwXbDBpnGt1xuTqCfDwqm7acQuLaxDop7pyMetuAHYHwOh6AeNYDhGMSGysp6kkgekCT8q1lPi4leWPxI1faDtyrscqFY2ggfhVp2I7YWm7twR4muRcZ4kHYwoHjJ/GfH41P2cxmsH5/ny+FHUktwP2v7T6Mu2bV0g2WAzDQfZkcvCgMTZZDDAg/vbrWW/hljmLXAQcqOoEn7R3E+WvlXUbptuhDFTpMSPlzolFTV9ELK8bp8oxzrULKKLJtvmNpswX3lPvL4nqviPWhzSWqLsJJ9AlxPShLoirC4KEupS2xyBM/nXtSeyNKgDBUtxRCqen1qO2TyH4UZhMM9x1QHU6AfU1WimxspJK2FcI4U15omFHvHoPzrcYXDrbUKggD9yeppvD8GtpAi7Dc8yeZNSsa2MOFY18mFqNQ8r+D0mob99UEswUdSQBWf7VdoPYg27TL7aJ7ykqogkTsMx0gE85PKefcav3cRkzuWkQRrBJY7qGAJ5QARp51GXNGB2HTSyHSr/a3CL/AM4HrH6xVVj/AOIGHykWCHuaAAlQNTEnX5c65xhMebV5kChTMglQpkjVhCjfvEaVPxbtGCVFy2HIEh5hw0k5tQV6aDlVeWpdOuGamH8KuSvleaNLhsJexLXLoxCrc0BYqSQd9JjTly22p+EvvhbqLexfcbMCfZ6zvJGYxqR3j186wFriGKN4taa4AWAdlMAAb6nQGNh9a1SlFIuXVVgWRW7wMWi0GZJZjlJ6mAap73cW1cvc08mnjCMoJ/bXVK+vn5Nl2edruGVr63QzM7MpLqZDkKZBBiAsAQOcVbSEUBQYnUkk+pYklvU0DhcWFuO7MchVY3KiC0xHUEfCp8DxO3eti6GhCxVZ3lWK69NQd61YvweXmn3XBhv4mcIT2+HuqNbtxbdzQwT9loG7ELl6mFFXnZvCtY4jjgXZ1FvDEFmJKqxvFVJYkmINatwJAIBO48xz86wXEOPXbHEcYbWHN9GTCq5VoCZVvESYOh72p0EeNQ0ouyYylOO1fzk6NZuAieo0rlnb7H23x9lVLv7NG9oqhnSYzICgMb5CesiToKPXtsLmDusVVLjApZRXLMQ3d9pIAgBs2o+741zThuLexc0Yhpg9SfPxmk5sya2rk0vw/Qzv1Hx4R03szxc30XIDbYRnttEKefcMMFPhMVZ4i1i2IUPbRTpmUakHo0kA1y/G8QxeIZXslmdTmzgxlgaqSfLUHkOlb7st2ytXsOReBNzLrlA10gjugTr161W249v3Pb/PI7PgyKW7Gr9+L5+L7DOJ4YYdAC0ypHr5epPwrmONwVpGYraADckOUD/LqPQRVvxjiT3XJDNkXuorEmAPf70a65fhWev4o58pkedFjkqe0GemyJp5l35AbPZz2zZUdgSdJQf662XB/wCGItL7S/dZl6KoX0mWP0pnZHKLqknnXWsQVa1lkaireNuS5M7Oowkkit7E9y7etKqraQL7MAdZ1zHUkiCSa1ly2GEMAR0IkVQ9nbyAuCQDbGVidNJ7pJ8hR93ioPdtDO3ht+g8TFNx8RplfLzK0iixXCmw+Mw7WAcly4Q46DKS8+GWTrzAo7jXCss3LY7v2lHLxHhVpgrDg57jS3IDYA/7D9aNNR6SpkrNKLT/AIzAsaHuGrjjvDvZtmX3G28D0qpZapTjtdM1cc1NWiCDSp8UqWNAkceJ+Va/shg+6bpGp7q/4RufU/SsRaLHQc9PjXU8BYCW1QbKoHwFN0mO5bvYq67JthtXknc0FxLGrZtNcbkPiToB8aKc1je32MyhEiQcxI+Q8ufxq7lnsi2ZuHHvmomNxONuNnzMWZySdQCyEjNm1BgSDykKdzT8Lgw2YBRmaYiQc5A2Ud0RPnQ8QAoa2ejgMCpYiRmiWOm3woU3sSCVtG3GveadDMbaGPGs7G97s18icFtS/QK4fwCLl0uzLdR4Ru7mULzAjLrI5ch405O2zWrhs4uLiglc+UE67SNvhWa4p7W2WyXvaRJJZoctIBJjQyxOxPjUXDuFNeYXMQzAgAgEbkgxP3QOu+tK9GTm3N8eC09jjGOPl8Xx+5fY/H23tk4dMtpn2DFQYJJI17uusR8KzOOxLZhm0BbcMTpqRIPOB+9qu+KoEtqi7aZTpGkiDpoYjw1rG8Tc3LiqpM8/Dqd6ZiVun0vcbki8WK/Lfh9mq4D2ixB7quTYTQrpEDUBZ1G2wMUK/Ei73VOdbbHMUDPk217oMSYFXP8AJjDp7FV0GXMd5ZkVp21mZqnxODkkwc2wI3HoB4HpSnO5teOi1hxJ4ozSTfb+SzuducUipbFycjCG0LEBSApI94SQeug16w8M4xese3VHNvOtnMW98ZDc0DMe6O8d5O21UVmc0mSBAjSSPtGfAD1qew6u7SwmQpB5ADc77974U5udXfgTtwOaiopW+q+H/su8Nxqzbsi1ZQM8QCdlB/Z0qnxqgwisGuXG7w06bxGnOrrsbwuxdLLmAfXQHUab/pVTjmFrEl2WShPuhRmPImYA51XjBKfH9v5Cllai49e/6dcFkL9yzayOFCuRbUGTcAInKCABtOpB57SaFsXntFirZc0qYjQfsb+FRcQ4v7XI+XKFBgeJOh+AX50DxW6VtLz1k+v+9dFTm1u7LMHjx42312Xl68mX2YQIwAjXRtCM0mSddd+pqtx6kkad8d6NzESdtIiDz2qLDWLt22hU6pMSfvCQAdh7rmD41YYW4CJcbZpEwdImZGhnptG+lNitrtlXUT9XHUR/AkZ3ATfTXpXTlvlRWL4czYS5qhe1oXYKc6A7mPtASPHQ77V0HD4W26C4rh1IlSDoQdiKu4/gwM75VgXBuD571y9edsrFYtgwDlEBmO86mAIrb4eyqLlRQo6ARWWckHSr3hmLzDLzp0KRTyW+Q+ngV4iGnKKaKBsfhRcQoee3geRrC3EKkgjUSCPEV0Misf2jw2W9IHvCfUaH8Kr6mFq0XdHkqW1lPmPQUqk9mfD515VLazS3IquDCb9of+Yv1muppXKOE3ov2ifvr8zFdVtnSrWj/Kyh+IXuQ5qw/b9TkVgJIMTyCnU/9oHrW4JrP9p8CLqgaiDII6wRBHMa0/KriVMMts0zmYv38pWLfsiTMOfaMAe7oVge6CBP2uulA8QxSMxRUa25BGmdWY6DU5cpcCddDNH46xlYyCCNDBMyPr+tCXM2/vgzJPUyNRO8a78tqy99M21C0VOMwC5lA9qcuUW7ZOcOZ74DkygyqJEcvGQViMeyuxuBWzHNJLAjmQJGsTpodQaY95RcUqxdtDlPI3AVzHTMTl68mOlSYu8qsFZSXIcBgpKS0yGBG0wQeRJ5U67FJyhX+gS5iEZTLAkjVdJXWAT4befQVWcLQe1De9IZVJEH489jR9/hgMSRmA1IkbHTyjw86hfhA7ym/lQAtIBmY3PSI1129ahOLe1cD55J7Lk7D+PXWdLbWrmXNvAMymh1G+pI35VRi9eTQH4iZ561pOF2lFn2QA70OpnkdSF8NqDx3DAVynKWYwJzhhIXIdBsc2wk/KgtJ14Jhkklabv9SmwF1mZy41AEZQBMyD5aH5UWq2yC7KVMgDUc99tep0+6d+U/EeBHD2mVbn94CxuAZtFVlXKGMAqdT4ZDPg3C2M9m4C6KRbFwMWILFcwgaRuW3jaJprStNEY832S3XfZU4Cy/tAy3Qh3zCQTrHlPryNavGYB7iKVb2hAP94F7ymZliNG1HwNZRMebdtVI7w0MDXQzB6RXTezuLY2kt2EVittSzsSqm4wJIBAP3uh32pOdyi1KhsHDZ2nfa9jnlzh5tL3/AO8AGuSN5GmhOkczGvlrW28bmuIrL3QCB4HkfGNvjW/49nYEHDqhbuZiA4gD3lMD+kA5ZB6aGsnjeHDOGRSSBqPUAHTaZosc4tc+Q57/ALdvEVV/vde/sG8NtMMzHQNoFgHZWXMQfBnEf1mvLaFnGXdTJYnuiN50k8o12HrXnC7jXCUOUNuASdF5CQDpJq2wXBH99Gzqxi5bOmpOiqx3kTrA3Aro3u+47VZMTgvT78k97GgkMWS42WMouDfaVMA8iVnll6Vadm+0fsLmQ5gram0dZZol7RGgaZJTn57gYm7hzNtrTWZM7q9olRPvrKjQ6waAsYRWBWyBdSZNqZdSokvbnfTlMmPSmN7XaMxLeqZ2C0VuKHUgqRII5g7VJhLZ5bjXSsd2J4l71rNmQyU0IIYauGk+fIfn0Dgyd70qzjkpq0UMsHjdMLwWNzCDo31/WjVGlV2Own2l9R+NGYG9mXxGhpwhkgFZztSnuHoSPiP0rSqKy3ay53V/xfgfzocnMWMwf8iKSf3rSoOfE/GvKqbTT3MzTXiNRoRqPMbV13heLFy2jjZlDfEVx+81av8AhxxsENhmPeSWTxQnUehP/wAhQ6WajKvcjXYnKG72Ohjah8TazCKlR6RrRZkmH7Q8DZ+9bgNswOzDkPMVjkVULC4HRoIClYGhBknmvkK7FesA1TcX4El5SroCPp5HlVPLp1J2i7h1bgqfRx/FWtBcAmM2YqCcsLCFhyBJjX51Pw/Fe1BImIBOgkNl1Gux2+FH9oex+Isgmy5dDurHvR0kaMPOqThtt1De0UoRqZ2gfp9KqSxuPZowyxn0S38KBqCMxMx0yyIIjmI1H1Bh3DOPXrDuzWywKsCVy7MwJJAgxMSBt1r17isJBnw589xInzqBm0LDSJAhoO41ieh8tOcGujJp8kuCaIrN0FEBuqmTvISYDKTOVZ3gab8hSuYu/fZbttVk5BkXRgwAC8t9uc+JoJ0d7gZMzPqMupBnU90bGF+U15gsUVc5RlYQSm+YDXTrTOK4A2yvn/Bf4J1uhVXNnDMrI0QFuDLJY+U7c6qf7KcNpkE5YjKWgkyJHeUDpOnhUeKRSrXFOVgvl4kH0B9aA/m3uMCW22gmK6KbVx4Bk49SC8Vw5c4MdyZdQQCd80GDHKDB9a6B2Sxduzh0GYTBAE8tYPLkKyz3Ga3rAVnB1PeLAHvdY971oNgO6Bp1I0PPn0qrllLJHa3RahjhfwX3ariylraqftExqQEgfZ6c48BVNw9M7sXbLOoGpJUaTHPWflNRYy1bA9tL5l9mCpIO4AZs8gwW1AAOh3pwFtlT2to5SYVljKdtiPcMGNRvRYse2KXf9hZcvDiuP6CcSiqQGTIP/FtCCogA51G3IkajUz0B9y6bWVHcEsQfaFIyAyveBOUzpDaAncaajWr7WSCmtu6GXKSQCqwTlYAsRKidD59IMU1tUKsns9AJALWxCwwIiIYgEyPIinJquSo7ukaO+s2sqEFGPfkguLZYM2u5zmQdhrPOKq04Ja+yDbcbMhfNI2PvRr5flUPCyllRdNxWRXIVMxmSJMayVJOo5QYq3XEK2ugU6gTI+8FB3Gw260uUpxaDjGEkyDgrtZxim64lzBcwmaTlJYbFpYd7TxFdf4dcCSTPQeXOuednOzFvF3Rdulio0yTocpDAn4x6mun2rAP2R/tWhp7cbMzVtb6Xg9t4xehp+FUKDHM15cw68hFJTyFWCoTXHhSaxHajEg3FWfdEnzb9APjWo4ni1RSWMKoJJ6ACSa5qMY152uHTMSY6DkPQRSsskuCxpoNvcFZ/A/OlUHs/GlSOC7yZq5JqoXHPh7y3bZ7ymfA9QfAjT1q3Kk71U8VsaTFUFKjQ2p9naezfHLeKsrdQ77jmrDcHxH61dg188dm+0NzB3c6mUPvp1HUdGH6V23gXHLWIti5bbMp+IPMEcj4Vq4cu5c9mLqtM8UrXRdGmkUg00gacVAXFWAwisR2l7OFu/bEsJ89tq6CQDQ97DdPhS8mNSVMbjyuDtHz/AIrDZXO6mdRBmRHw2OnjXlzFtBzywMbDkNB9BXYOM9nLOI99Yb7y6N+vrWM4j2CvLraZbg6GFb56H41Slhkvk0seqhL4ZjrT7hTMz3TodRv++lAYzDbaEMBM+IbddNv1q64n2bvJIezdX+oAkDXcESKDXCvDQ4YD7Jg/XfbwoE9pYtSKu1iSSVuGCRAaNDvowojDYL2DZmBCtmVZAKyCAxHiDoDTsVh9NbYO+okCR6+P0ofDY1W0flIHeBjflvuSdKanadCpL7lZdWLp+y/jHlr5bgfAU02yf3zPX50FlVtQZPhoetPTOoMEmOR1/f6VX2D1MPuW07694hhA13G+viCBHlzofh2Ke0Rba2jrJyM2eB55CD6EV7bxWkMCYOgG23KirWIsmJOQzALdRrG1SnKPDRElGXNjMPh5UsxAdtoUSkbZeg5R4mn28bcU5WXPp9mRpH3SdR5GpjftDQMT00Gsb+Y1pLetaSjHxkAc9v8Aeh5b+5E/alwwe8lq6pjuHf3YiZ5HTL4aVLwW06DKe9mMKi6mQY8gD012NWiYG7dQm1hoWNJyy3gC0VcdheA4lGzXbaoCmXLILZs2jSCdxvtsKfHG5KmVsmaMHa7N/wBjcLksZTAPMjrAJ18zV9ecDSaBwq+zQKPMnx/cU461fiqVGTKW6TZI1wmk1wIJ5mmO4TU79Kw3bbtf7EG1aIa8Rr0tg8z/AFdB6nlMZMigrYWLFLJLbED7fceLt/LWzzBumfVUn5n08aAwCKFG3oKxuFBZ5YkkmTrMnmSZk1r8M4CwBWasjnJyZsrCscVFB2Zf3NKhvbtSorO2lJ7XwihcZ3hv8KNXDDnrUnsx92qiostmOv4UzRfBOK3cI+e02/vKfdYDqOvjVnxCzM/lVRctCjjkaOaUlTOwdlu2VnEiActzmjb+Y6jxHrFaq3dBr5sZCpBUkEaggkEHwNa7gH8Qb1qEvj2ifeEZx5jZvSPWr+LU32ZefQtcwO0kU2az/Be1Fi+s27gPUfaHmDqKukxCnnVpST6M+UHF00e3LoOhE1AwFPa0eWtRmoZw0oKExHDbTzmtoZ3lVP4UZSoaJTaM3jOxuEuCDaA0jQkfLY+orPJ/CnCgyzXGHQkD/tArosV5FQopdB+rL3MJZ/hphEJKqwn+okDymvbnYG3yuuPOCPzrdRXkVDxp9hRzTXTOeXOwDTIvD1U/nXq9hGzEteGv9JP1auhZKctuh9GIf1WT3/wjD4TsLbUyXduWgAEdKvMH2cspqttQRzOrfE61oAoqe3Yn960axJC5Z5vtlZZwIFWNi2Fqc2wu8Dz3+FRNiVHuifE7UxJIU22TKpiToKhv4xVBg7bsdABWT7RdusPYkZ/a3B9i3EA/1NsPr4VzHtB2pxGL0dglvlbWcv8Am5sfPTwFKnnjEtYdHPJy+EbDtZ/EEd63hDmbY3uQ65Op/q26TXOXvMxJJknUncknqdzUa2/OjsBg8xFZ+TLuds2cWCOKNIsOBYXXMRWlQUPgrGUAAUZ5mhTpAtWzylXuYePwpVG5k7SqJ6fjXoNRKKlRJEGl2S0RMs1W4vC84q1y16wFS0QmZi5ZqBrJ8K0OIwYIkVVXbBHxrlJoJUyuUMplSQRsVJB9DWh4V23xVnRiLoH3tG/6h+INVWWaY9uabHK0BPDGS5Ok8L/iTYb/AIma2fESPiP0rU4HtFZvCUdH8iDXBzaFPS3Go+NWFqWipLQwfXB9Bi+h8KcI61wnDcXxNv3b9webEj0DTVha7aYtftq3+JPyIo1qYvwIloJrpnZ8viKWSuR2/wCIuI520byJH50Qn8SLnOwvpcP+mmevAX9FlOqezNL2XiPjXLT/ABNYf8j/AOz/APNQP/FC59nDj1c/6alZokfR5fY62EHNhTpQcyfIVxu9/ErFH3bdpfPMfxFAYjttj3/5wT/Aij5kGo9eKDWgyM7mcWo2UeZNVPEu12HtSHxCA/dXVvgNflXDcTj793/iXrj+DOxHwmKiW1Spar2LEPw1f9mdJ4p/ExBIsWS5+9cMDzyiSflWO4v2mxWJ0uXCFP2E7qx001I8zVWqgcpp/npVaeeUi7j0uKHSIltf7U5V6CpVXoCfPaisLg2Y+HhSXJssNpEeHwpY9K0WBwgUfnXuEwQUch9aNAA5T51Kj5YmUrPQ3nXjGOY9K8dj1qIn0qWyEiTT+qlQ+cdT869obCoHtn99aT3+k1E92NKYhn1oEQT2bnrTm1FQolSqtMQLJFXqKhu4cQfGp1/ZprH5UVA2Vz4GhbuFiru1vyptzCyfyoJRCjIzNxddaQJ5Cru7hgNgKrMTZMxJqOQ1QE69THrQ7uo6tRTYEHnXowVGpRXkOrAM7MYAAkwPXajF4BiPbGzcHs2UOzFz3FW2uZySoMwOkmTFP/kxzNdAuA4lVe2CbbriwZYC4PbgkqF1BP8AdyNQDlO007HOL6E5bjXtyYW72RxgZh/L3Gg+8qsUYEkKyGO8pgkeFV38qQSCCCCQREQQYINdV4fxFhZQLhbg9kAhtG4FYhFTPcdTbACDMgOY81kaTWF4pYY3rrFCk3HkHUhixJUnYkeFdlkkrTOwtybUkU4sVKloUX7HoCacLDH9KrPI2WaSBstIR5/IUanD2O/xoq1wsdJqLshtFRBOg+VE2cAx8PnV7ZwA6UXawwFEkwHMqsJwwDUifParazZy1NArwn9/rRKNC27PV/ZpjvSpsCubRKRGzHyqJl61K79PlQ5J/f50LkEkewOo+dKma/e+YpUFhUClpp9sfvSmIKlSKkAlTb8KcutRqDU9sdalAscqU3JvSa54V5bPTlRqwGiRB4U5Kbyp2gHOpOGi0DQt/DaUXm03pMRAFc0SmUtzD1DFXl62IoG5bpMo10PjIl4Fjksly9r2mZcoBiNT3gZ5EVo+Gcfw4BzZ1PtAwgGQqgJuNmIu3j/7Y61kGU7b1NhLRJ12ooZJx4QGTDCfLNVxLilm4pUXAczAk+xYGM+GLakaaW7mkn7NAdqcYuJa2UkBZGogfZBI1JMsGaSFjPtMkjqBRNi2DRynOSaYuOKMWmvBXWcFRa4Two5bdela5RQTkBjDAcqcqVM9MJoqIsVKvDTS9DZNDmqMuP3rXhprH9n8qFsJI9JJqNh1NeNcqPOaFsKjxmjlUT3PWvXPX86af31qAhvtD0+tKlFKo4OGW9qQ3Ne0qJCya3+f0qZKVKpQLG3OXrSFKlTECOtbetS3KVKoOQO1LpSpVJJ6+x9KFr2lSpDIkZ39KIwu1KlQx7Dl0Tnai8NtSpU4Sw5fwqJtqVKiQI1qam9KlXSORGu5qKlSoBg+7v6UOeVKlQII8f8Afwpt73RSpVDJI13HlUQpUq4IbSpUq4g//9k=" alt="Hot Cakes Originales">
+          <div class="plate-body">
+            <div class="plate-title">Originales <em style="font-style:italic;color:var(--muted)">310 g</em></div>
+            <div class="plate-desc">Esponjados al natural, acompañados de miel maple</div>
+            <div class="plate-meta"><div style="color:var(--muted)">Recomendado</div><div class="price-tag">$112</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- Especialidades y Desayunos -->
+    <section id="especialidades" class="stagger delay-3">
+      <h2>Especialidades & Desayunos</h2>
+      <p class="lead">Sándwiches, blintzes, platos de la granja y desayunos ligeros.</p>
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:16px;margin-top:12px">
+        <div>
+          <div class="cards">
+            <article class="plate-card">
+              <img class="plate-thumb" src="https://enpuertovallarta.com.mx/images/easyblog_articles/278/la-casa-del-waffle-puerto-vallarta-portada.webp" alt="Waffle Steak">
+              <div class="plate-body"><div class="plate-title">Waffle Steak</div><div class="plate-desc">Sandwich relleno con adobera, sirloin y frijoles</div><div class="plate-meta"><div style="color:var(--muted)">Plato fuerte</div><div class="price-tag">$174</div></div></div>
+            </article>
+
+            <article class="plate-card">
+              <img class="plate-thumb" src="https://lashadaspanama.com/wp-content/uploads/2021/02/IMG_5709_R-scaled-e1694097671751.jpg" alt="Plato fruta">
+              <div class="plate-body"><div class="plate-title">Plato de fruta de temporada <em style="font-style:italic;color:var(--muted)">520 g</em></div><div class="plate-desc">Fruta fresca con cottage</div><div class="plate-meta"><div style="color:var(--muted)">Ligero</div><div class="price-tag">$99</div></div></div>
+            </article>
+          </div>
+        </div>
+
+        <aside>
+          <div style="background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.7));padding:14px;border-radius:12px;box-shadow:0 12px 36px rgba(62,39,33,0.06);height:100%">
+            <h4 style="margin-top:0">De nuestro horno</h4>
+            <img src="https://i.pinimg.com/474x/55/ee/d1/55eed1dcbd820a0e4c8f0454fba05671.jpg" alt="Pan frances" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px">
+            <div style="color:var(--muted);font-style:italic">Pan francés, bisquet y crepas recién horneadas — ideal para acompañar.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- Bebidas y Cafés -->
+    <section id="bebidas" class="stagger delay-1">
+      <h2>Bebidas & Cafés</h2>
+      <p class="lead">Jugos, licuados, smoothies, cafés especiales y malteadas.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div class="trans-list">
+          <ul>
+            <li><strong>Jugos Naturales (377 ml)</strong> <span>$55</span></li>
+            <li><strong>Grandes (473 ml)</strong> <span>$72</span></li>
+            <li><strong>Leche (377 ml)</strong> <span>$41</span></li>
+            <li><strong>Chocomilk</strong> <span>$59</span></li>
+            <li><strong>Banana Maní-A (473 ml)</strong> <span>$113</span></li>
+            <li><strong>Licuado de la casa (473 ml)</strong> <span>$103</span></li>
+            <li><strong>Licuado (473 ml)</strong> <span>$78</span></li>
+            <li><strong>Shake (473 ml)</strong> <span>$99</span></li>
+            <li><strong>Smoothies (473 ml)</strong> <span>$95</span></li>
+            <li><strong>Chocolate (300 ml)</strong> <span>$58</span></li>
+            <li><strong>Refresco (355 ml)</strong> <span>$48</span></li>
+            <li><strong>Té helado (473 ml)</strong> <span>$47</span></li>
+            <li><strong>Té caliente (300 ml)</strong> <span>$30</span></li>
+            <li><strong>Agua embotellada (500 ml)</strong> <span>$118</span></li>
+            <li><strong>Malteadas (473 ml)</strong> <span>Varía</span></li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <img src="https://png.pngtree.com/thumb_back/fh260/background/20250914/pngtree-decadent-chocolate-milkshake-delight-with-cherry-topping-image_19357754.webp" alt="shake" style="width:100%;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 12px 36px rgba(62,39,33,0.06)">
+          <div style="background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.7));padding:12px;border-radius:10px;box-shadow:0 10px 30px rgba(62,39,33,0.06)">
+            <h5 style="margin:0">Cafés</h5>
+            <div style="color:var(--muted);font-style:italic;margin-top:6px">Capuchino, Latte, Mocha y más — preparados al momento</div>
+            <ul style="margin:8px 0 0 0;padding:0;list-style:none;color:var(--muted)">
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Capuchino (300 ml) <span>$59</span></li>
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Capuchino Cajeta <span>$69</span></li>
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Capuchino Mocha <span>$89</span></li>
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Capuchino Helado <span>$89</span></li>
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Café Latte <span>$84</span></li>
+              <li style="display:flex;justify-content:space-between;padding:6px 0">Café Americano <span>$46</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- Full transcription -->
+    <section id="fullList" class="stagger delay-2">
+      <h2>Menú Completo</h2>
+      <p class="lead">Transcripción fiel del menú físico para consulta rápida.</p>
+      <div class="trans-list" style="margin-top:12px">
+        <div>
+          <ul>
+            <li>El Original (120 g) <span>$109</span></li>
+            <li>Manzana (330 g) <span>$132</span></li>
+            <li>Fresa (390 g) <span>$135</span></li>
+            <li>Cajeta (220 g) <span>$128</span></li>
+            <li>Exótico (450 g) <span>$143</span></li>
+            <li>Waffle Ferrero (210 g) <span>$154</span></li>
+            <li>Choco Chip (280 g) <span>$128</span></li>
+            <li>Waffle con Tocino (190 g) <span>$128</span></li>
+            <li>Waffle con Frutas (430 g) <span>$135</span></li>
+            <li>Plátano con Nuez (350 g) <span>$131</span></li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>Hot Cakes Originales (310 g) <span>$112</span></li>
+            <li>Hot Cake Tropical (410 g) <span>$136</span></li>
+            <li>Choco Chip (430 g) <span>$133</span></li>
+            <li>Cajeta (410 g) <span>$133</span></li>
+            <li>Fresa (530 g) <span>$136</span></li>
+            <li>Red Velvet (420 g) <span>$149</span></li>
+            <li>Hot Cake Suizos (520 g) <span>$129</span></li>
+            <li>Con Tocino o Jamón (380 g) <span>$124</span></li>
+            <li>Hot Cake Ferrero (210 g) <span>$142</span></li>
+            <li>Waffle Sandwich Grande (350 g) <span>$173</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <small>&copy; <span id="year"></span> La Casa del Waffle — Menú digital (edición concurso)</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // add simple stagger reveal on load
+    document.querySelectorAll('.stagger').forEach((el,i)=>{el.style.opacity=0;el.style.transform='translateY(12px)';setTimeout(()=>{el.style.transition='all .6s cubic-bezier(.2,.9,.2,1)';el.style.opacity=1;el.style.transform='none'},200 + i*140)});
+
+    // nav smooth scrolling via data-target if present
+    document.querySelectorAll('[data-target]').forEach(btn=>{btn.addEventListener('click',()=>{const tgt=btn.getAttribute('data-target');if(tgt){const el=document.querySelector(tgt);if(el) el.scrollIntoView({behavior:'smooth',block:'start'})}})});
+
+    // keyboard accessibility for plate cards
+    document.querySelectorAll('.plate-card').forEach(card=>{card.tabIndex=0;card.addEventListener('keydown',e=>{if(e.key==='Enter'){card.click()}});card.addEventListener('click',()=>{const title=card.querySelector('.plate-title').innerText;const price=card.querySelector('.price-tag')?card.querySelector('.price-tag').innerText:'';const img=card.querySelector('img').src;const desc=card.querySelector('.plate-desc').innerText;const modal=document.createElement('div');modal.style.position='fixed';modal.style.inset=0;modal.style.background='rgba(0,0,0,0.5)';modal.style.display='grid';modal.style.placeItems='center';modal.style.zIndex=9999;modal.innerHTML=`<div style='width:92%;max-width:940px;background:white;border-radius:12px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,0.6)'><img src="${img}" style='width:100%;height:420px;object-fit:cover'><div style='padding:18px'><h3 style='margin:0'>${title} <span style='float:right;color:var(--accent)'>${price}</span></h3><p style='color:#666;margin-top:8px'>${desc}</p><div style='text-align:right;margin-top:12px'><button id="closeModal" style='padding:.5rem .8rem;border-radius:8px;border:0;background:#f4f4f4;cursor:pointer'>Cerrar</button></div></div></div>`;document.body.appendChild(modal);modal.querySelector('#closeModal').addEventListener('click',()=>document.body.removeChild(modal));modal.addEventListener('click',e=>{if(e.target===modal)document.body.removeChild(modal)});})});
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <script>
+  const btnTop = document.getElementById('btn-top');
+  btnTop.addEventListener('click', () => {
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+  btnTop.addEventListener('mouseover', () => btnTop.style.transform='translateY(-4px)');
+  btnTop.addEventListener('mouseout', () => btnTop.style.transform='translateY(0)');
+
+</script>
+</body>
+</html>
