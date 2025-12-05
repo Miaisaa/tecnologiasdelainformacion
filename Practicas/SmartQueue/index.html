@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartQueue – Prototipo</title>
+
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #031926, #0a3d62, #02121f);
+    background-size: 200% 200%;
+    animation: gradientMove 12s ease infinite;
+    color: #eaf9ff;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 3.2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  }
+
+  /* CONTENEDOR PRINCIPAL */
+  .smartqueue-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 45px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 30px;
+    box-shadow: 0 4px 50px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(18px);
+    animation: fadeIn 1s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* PANEL DE CONTROL */
+  .panel {
+    background: rgba(0, 0, 0, 0.45);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: inset 0 0 25px rgba(0, 255, 255, 0.15);
+  }
+
+  .panel h2 {
+    font-size: 1.9rem;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin: 15px 0 6px;
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    box-shadow: 0 4px 15px rgba(0, 140, 255, 0.4);
+    transition: 0.25s;
+  }
+
+  button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 200, 255, 0.7);
+  }
+
+  /* DISPLAY DE TURNOS */
+  .display {
+    background: rgba(0, 0, 0, 0.45);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: inset 0 0 25px rgba(0, 255, 255, 0.15);
+    text-align: center;
+    animation: pulseGlow 4s infinite ease-in-out;
+  }
+
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 15px rgba(0,255,255,0.3); }
+    50% { box-shadow: 0 0 35px rgba(0,255,255,0.5); }
+    100% { box-shadow: 0 0 15px rgba(0,255,255,0.3); }
+  }
+
+  .number-box {
+    margin: auto;
+    margin-top: 10px;
+    background: black;
+    width: 100%;
+    padding: 40px 0;
+    border-radius: 20px;
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #00f7ff;
+    text-shadow: 0 0 25px #00eaff;
+  }
+
+  .history {
+    margin-top: 20px;
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  /* Responsive Profesional - Versión Móvil */
+  @media (max-width: 850px) {
+    .smartqueue-container {
+      grid-template-columns: 1fr;
+      padding: 25px;
+      gap: 30px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+    }
+
+    .number-box {
+      font-size: 3.4rem;
+      padding: 28px 0;
+    }
+  }
+  </style>
+</head>
+
+<body>
+  <h1>SmartQueue – Sistema Inteligente de Turnos</h1>
+
+  <div class="smartqueue-container">
+    <!-- PANEL DE CONTROL -->
+    <div class="panel">
+      <h2>Panel de Control</h2>
+
+      <label>Agregar persona a la fila</label>
+      <input type="text" id="nombre" placeholder="Nombre o identificación" />
+      <button onclick="agregarPersona()">Agregar</button>
+
+      <label>Atender siguiente</label>
+      <button onclick="atender()">Llamar siguiente</button>
+    </div>
+
+    <!-- DISPLAY DE TURNO -->
+    <div class="display">
+      <h2>Turno Actual</h2>
+      <div class="number-box" id="turnoActual">—</div>
+      <div class="history" id="historial">No hay historial</div>
+    </div>
+  </div>
+
+
+<script>
+  let fila = [];
+  let historial = [];
+  let turno = 0;
+
+  function agregarPersona() {
+    const nombre = document.getElementById("nombre").value.trim();
+    if (nombre === "") return alert("Ingresa un nombre válido");
+
+    turno++;
+    fila.push({ numero: turno, nombre });
+
+    document.getElementById("nombre").value = "";
+    alert("Turno asignado: " + turno);
+  }
+
+  function atender() {
+    if (fila.length === 0) {
+      document.getElementById("turnoActual").innerText = "—";
+      alert("No hay personas en la fila");
+      return;
+    }
+
+    const siguiente = fila.shift();
+    historial.unshift(`Turno ${siguiente.numero} - ${siguiente.nombre}`);
+
+    document.getElementById("turnoActual").innerText = siguiente.numero;
+    document.getElementById("historial").innerText = historial.slice(0, 5).join(" | ");
+
+    const audio = new SpeechSynthesisUtterance(`Turno ${siguiente.numero}, pase por favor`);
+    audio.lang = "es-MX";
+    speechSynthesis.speak(audio);
+  }
+</script>
+
+</body>
+</html>

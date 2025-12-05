@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
+  <title>SmartCross — Semáforo Peatonal Moderno (Prototipo C)</title>
+
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-day: linear-gradient(180deg,#cfeefb 0%, #b4e0ff 40%, #e6f7ff 100%);
+      --bg-night: linear-gradient(180deg,#02121b 0%, #022b3a 60%, #003e4d 100%);
+      --panel: rgba(255,255,255,0.95);
+      --card: rgba(255,255,255,0.06);
+      --accent:#0b7fff;
+      --red:#e53b3b;
+      --amber:#ffbc3a;
+      --green:#30d158;
+      --glass: rgba(255,255,255,0.06);
+      --text-dark:#072034;
+    }
+
+    /* Base y layout (Grid + Flexbox) */
+    html,body{ height:100%; margin:0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    body{
+      background: var(--bg-night);
+      color: #e9fbff;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:28px;
+      box-sizing:border-box;
+    }
+
+    /* Contenedor central fijo para evitar "movimiento" extraño en móvil */
+    .shell{
+      width:100%;
+      max-width:1100px;
+      border-radius:18px;
+      padding:18px;
+      box-sizing:border-box;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:20px;
+      align-items:start;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    @media (max-width:920px){
+      .shell{ grid-template-columns: 1fr; padding:14px; gap:16px; }
+    }
+
+    /* Left: demo / visual */
+    .demo {
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.18));
+      padding:20px;
+      border-radius:14px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+    }
+
+    .title {
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .title h1{
+      margin:0; font-size:1.45rem; font-weight:700; letter-spacing:0.6px;
+      color:#e9fbff;
+    }
+    .subtitle { color: #bfeefc; font-size:0.92rem; opacity:0.9; }
+
+    /* Traffic unit (realistic) */
+    .cross-wrapper{ display:flex; gap:28px; width:100%; align-items:center; justify-content:center; flex-wrap:wrap; padding:6px; }
+    .semaforo {
+      width:200px;
+      background:#0b1216;
+      padding:18px;
+      border-radius:22px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6), inset 0 -4px 18px rgba(255,255,255,0.02);
+    }
+
+    .lamp {
+      width:86px; height:86px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:28px; color:#07121a;
+      background: #1b2226;
+      box-shadow: inset 0 6px 30px rgba(0,0,0,0.7);
+      transition: transform .35s ease, box-shadow .35s ease, opacity .35s ease;
+      opacity:0.24;
+    }
+    .lamp.on{ opacity:1; transform:scale(1.04); box-shadow: 0 0 30px currentColor, inset 0 6px 20px rgba(255,255,255,0.06);}
+
+    .lamp.red{ background: radial-gradient(circle at 30% 30%, #ff7f7f, #e53b3b 60%); color:#2b0000; }
+    .lamp.amber{ background: radial-gradient(circle at 30% 30%, #ffe8a6, #ffbc3a 60%); color:#2b1600; }
+    .lamp.green{ background: radial-gradient(circle at 30% 30%, #c7ffd6, #30d158 60%); color:#02260a; }
+
+    /* Pedestrian indicator block (muñequito + counter) */
+    .ped-block {
+      width:360px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45), inset 0 2px 12px rgba(255,255,255,0.01);
+    }
+
+    .ped-visual {
+      display:flex; flex-direction:column; align-items:center; gap:10px; width:50%;
+    }
+
+    /* Big animated pedestrian SVG */
+    .walker {
+      width:120px; height:120px; display:flex; align-items:center; justify-content:center;
+    }
+    /* We'll animate the walker SVG using CSS classes */
+
+    .counter {
+      width:46%;
+      text-align:center;
+      padding:8px;
+      border-radius:12px;
+      background: linear-gradient(180deg,#000,#07121a);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    .counter .label { font-size:13px; color:#aeeefc; margin-bottom:6px; }
+    .counter .num { font-size:48px; font-weight:800; color:#00ffd6; text-shadow: 0 0 18px #00eaff; }
+
+    /* Right panel: controls */
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      padding:18px;
+      border-radius:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .panel h3{ margin:0; font-size:1.05rem; color:#e9fbff; }
+    .small { font-size:0.9rem; color:#bfeefc; opacity:0.9; }
+
+    .controls { display:grid; gap:10px; margin-top:6px; }
+    .btn {
+      cursor:pointer; border:none; padding:12px; border-radius:12px; font-weight:700;
+      color:#02121a; background: linear-gradient(135deg,#a0f6d3,#30d158);
+      box-shadow: 0 8px 20px rgba(48,209,88,0.18); transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .btn.secondary { background: linear-gradient(135deg,#ffd89a,#ffbc3a); box-shadow: 0 8px 20px rgba(255,188,58,0.12); color:#1f1400; }
+    .btn.ghost { background: linear-gradient(135deg,#ffd7db,#ff6b6b); color:#2b0000; box-shadow: 0 8px 20px rgba(255,107,107,0.12); }
+    .btn:active{ transform: translateY(2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+    /* Request/physical button look */
+    .physical {
+      width:100%; height:72px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg,#001425,#002a36); color:#9ff3ea; font-weight:800; font-size:1.05rem;
+      box-shadow: 0 8px 30px rgba(2,44,62,0.6), inset 0 -6px 18px rgba(255,255,255,0.02);
+      user-select:none;
+    }
+    .physical .hint{ font-size:0.9rem; opacity:0.9; margin-top:6px; color:#bdeff5; }
+
+    /* Overlay large countdown */
+    .overlay-count{
+      position:fixed;
+      left:50%; top:12%;
+      transform:translateX(-50%);
+      background: linear-gradient(180deg,#000,#07121a);
+      color:#00ffd6;
+      padding:18px 28px;
+      border-radius:14px;
+      font-weight:900;
+      font-size:38px;
+      letter-spacing:1px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.6);
+      display:none;
+      z-index:2200;
+      text-align:center;
+      min-width:150px;
+    }
+    .overlay-count.show { display:block; animation: pop .28s ease; }
+    @keyframes pop { from{ transform:translateX(-50%) scale(.9); opacity:0 } to{ transform:translateX(-50%) scale(1); opacity:1 } }
+
+    /* Small footer controls */
+    .meta { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:8px; }
+    .toggle { font-size:14px; color:#bfeefc; }
+
+    /* Night mode reduced brightness (will be toggled via JS by default) */
+    .night .lamp { filter: drop-shadow(0 0 12px rgba(0,0,0,0.6)); opacity:.7 }
+    /* Accessibility focus */
+    button:focus, .physical:focus { outline: 3px solid rgba(0,255,200,0.14); outline-offset:4px; }
+
+    /* Ensure elements scale nicely on small screens but remain centered & legible */
+    @media (max-width:420px){
+      .counter .num{ font-size:36px; }
+      .lamp{ width:72px; height:72px; }
+      .semaforo{ width:160px; padding:12px; gap:10px; border-radius:18px;}
+      .ped-block{ width:100%; flex-direction:column; gap:12px; align-items:center; }
+      .walker{ width:90px; height:90px; }
+      .overlay-count{ top:8%; font-size:32px; min-width:120px; }
+      .shell{ padding:12px; gap:10px; }
+    }
+
+    /* subtle helper for visually-hidden text */
+    .sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+  </style>
+</head>
+
+<body>
+  <!-- Large overlay counter for presentation -->
+  <div id="overlay" class="overlay-count" aria-hidden="true">10</div>
+
+  <div class="shell" id="pageShell" role="application" aria-label="SmartCross Semáforo Peatonal">
+    <!-- DEMO / VISUAL -->
+    <section class="demo" aria-labelledby="demoTitle">
+      <div class="title">
+        <div>
+          <h1 id="demoTitle">SmartCross — Semáforo Peatonal</h1>
+          <div class="subtitle">Diseño realista — Modo C (semáforo real + muñequito)</div>
+        </div>
+        <div class="small">v2.0 • Demo</div>
+      </div>
+
+      <div class="cross-wrapper" role="region" aria-label="Semáforo y peatón">
+        <div class="semaforo" aria-hidden="true">
+          <div id="lampRed" class="lamp red" aria-hidden="true">✖</div>
+          <div id="lampAmber" class="lamp amber" aria-hidden="true">•</div>
+          <div id="lampGreen" class="lamp green" aria-hidden="true">✔</div>
+        </div>
+
+        <div class="ped-block" role="status" aria-live="polite">
+          <div class="ped-visual">
+            <div class="walker" id="walkerSVG" aria-hidden="true">
+              <!-- Small inline SVG of walking person (animated via JS/CSS) -->
+              <svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Icono de peatón">
+                <g id="walkerGroup" transform="translate(0,0)">
+                  <!-- head -->
+                  <circle cx="60" cy="24" r="8" fill="#e9fbff"></circle>
+                  <!-- body -->
+                  <rect x="54" y="34" width="12" height="26" rx="3" fill="#e9fbff"></rect>
+                  <!-- left leg -->
+                  <rect id="legL" x="52" y="58" width="6" height="20" rx="3" fill="#e9fbff" transform-origin="55 68"></rect>
+                  <!-- right leg -->
+                  <rect id="legR" x="62" y="58" width="6" height="20" rx="3" fill="#e9fbff" transform-origin="65 68"></rect>
+                  <!-- left arm -->
+                  <rect id="armL" x="46" y="36" width="6" height="18" rx="3" fill="#e9fbff" transform-origin="49 45"></rect>
+                  <!-- right arm -->
+                  <rect id="armR" x="68" y="36" width="6" height="18" rx="3" fill="#e9fbff" transform-origin="71 45"></rect>
+                </g>
+              </svg>
+            </div>
+            <div class="physical" role="button" id="physicalBtn" tabindex="0" aria-pressed="false">
+              Pulsador físico (simulado) — mantener 1s para solicitar
+            </div>
+            <div class="hint small" id="sensorHint">Presiona el botón o usa "Solicitar cruce"</div>
+          </div>
+
+          <div class="counter" aria-hidden="false">
+            <div class="label">Tiempo para peatones</div>
+            <div id="counterNum" class="num">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width:100%; display:flex; justify-content:center; margin-top:6px;">
+        <div class="small">Accesible: voz y tono para personas con baja visión</div>
+      </div>
+    </section>
+
+    <!-- PANEL -->
+    <aside class="panel" aria-labelledby="panelTitle">
+      <h3 id="panelTitle">Panel de Control</h3>
+      <div class="small">Controla la secuencia y las preferencias del cruce.</div>
+
+      <div class="controls" role="group" aria-label="Controles del semáforo">
+        <button class="btn" id="reqBtn" aria-label="Solicitar cruce">Solicitar cruce (usuario)</button>
+        <button class="btn secondary" id="smartBtn" aria-label="Modo inteligente">Iniciar modo inteligente</button>
+        <button class="btn ghost" id="stopBtn" aria-label="Detener">Detener secuencia</button>
+
+        <div style="display:flex; gap:10px; margin-top:6px;">
+          <div style="flex:1">
+            <label class="small">Volumen</label>
+            <input type="range" id="volRange" min="0" max="1" step="0.01" value="0.85" aria-label="Volumen">
+          </div>
+          <div style="width:110px">
+            <label class="small">Duración (s)</label>
+            <input type="number" id="durInput" min="5" max="30" value="12" style="width:100%; padding:8px; border-radius:8px; border:none;">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
+          <label class="small" style="margin:0;">Modo nocturno</label>
+          <input type="checkbox" id="nightToggle" aria-label="Activar modo nocturno">
+        </div>
+
+        <div style="margin-top:8px;">
+          <label class="small">Idioma voz</label>
+          <select id="lang" style="width:100%; padding:10px; border-radius:8px; border:none;">
+            <option value="es-ES" selected>Español (ES)</option>
+            <option value="es-MX">Español (MX)</option>
+            <option value="en-US">English (US)</option>
+          </select>
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button id="testSound" class="btn" style="flex:1">Probar sonido</button>
+          <button id="testVoice" class="btn secondary" style="flex:1">Probar voz</button>
+        </div>
+
+        <div class="meta">
+          <div class="small">Estado: <span id="statusLabel">Inactivo</span></div>
+          <div class="small">Conexión: simulado</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Visually hidden helper text for screen readers -->
+  <div class="sr-only" aria-hidden="false" id="srstatus">Semáforo inactivo</div>
+
+  <script>
+    /***********************
+     * SMARTCROSS ULTRA (C)
+     * - Realistic semáforo + pedestrian
+     * - Simulated physical button + request button
+     * - Animated walker + countdown overlay
+     * - SpeechSynthesis + WebAudio beeps
+     * - Night mode auto / manual
+     * - Responsive locked for QR / mobile
+     ***********************/
+
+    // Elements
+    const lampRed = document.getElementById('lampRed');
+    const lampAmber = document.getElementById('lampAmber');
+    const lampGreen = document.getElementById('lampGreen');
+    const counterNum = document.getElementById('counterNum');
+    const overlay = document.getElementById('overlay');
+    const reqBtn = document.getElementById('reqBtn');
+    const smartBtn = document.getElementById('smartBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const testSound = document.getElementById('testSound');
+    const testVoice = document.getElementById('testVoice');
+    const volRange = document.getElementById('volRange');
+    const durInput = document.getElementById('durInput');
+    const langSelect = document.getElementById('lang');
+    const nightToggle = document.getElementById('nightToggle');
+    const physicalBtn = document.getElementById('physicalBtn');
+    const statusLabel = document.getElementById('statusLabel');
+    const srstatus = document.getElementById('srstatus');
+    const walkerGroup = document.getElementById('walkerGroup');
+    const walkerLegL = document.getElementById('legL');
+    const walkerLegR = document.getElementById('legR');
+    const walkerArmL = document.getElementById('armL');
+    const walkerArmR = document.getElementById('armR');
+
+    let busy = false;
+    let sequenceTimer = null;
+    let overlayTimer = null;
+
+    // WebAudio beep generator (simple)
+    function beep(freq=900, duration=120, vol=0.7){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.value = vol;
+        o.connect(g); g.connect(ctx.destination);
+        o.start();
+        setTimeout(()=>{ o.stop(); ctx.close(); }, duration);
+      }catch(e){ console.warn('WebAudio no disponible', e); }
+    }
+
+    // Accessible speak
+    function speak(text){
+      if(!('speechSynthesis' in window)) return;
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.lang = langSelect.value || 'es-ES';
+      ut.volume = Number(volRange.value || 0.8);
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(ut);
+    }
+
+    // Visual helper: set lamp states
+    function setState(state){
+      lampRed.classList.remove('on');
+      lampAmber.classList.remove('on');
+      lampGreen.classList.remove('on');
+      document.getElementById('pageShell').classList.remove('night'); // reset (night may dim via class)
+      if(state === 'red') { lampRed.classList.add('on'); statusLabel.textContent='ALTO'; srstatus.innerText='Alto: no cruzar'; }
+      if(state === 'amber'){ lampAmber.classList.add('on'); statusLabel.textContent='PRECAUCIÓN'; srstatus.innerText='Precaución'; }
+      if(state === 'green'){ lampGreen.classList.add('on'); statusLabel.textContent='CRUZAR'; srstatus.innerText='Cruzar permitido'; }
+      // Update accessible text
+      document.getElementById('srstatus').setAttribute('aria-hidden','false');
+    }
+
+    // Animate walker (simple leg swing)
+    let walkerAnim = null;
+    function startWalkerAnimation(){
+      let angle = 0; let dir=1;
+      walkerAnim = setInterval(()=> {
+        angle += 12 * dir;
+        if(angle>32) dir = -1;
+        if(angle<-32) dir = 1;
+        walkerLegL.setAttribute('transform','rotate('+angle+' 55 68)');
+        walkerLegR.setAttribute('transform','rotate('+( -angle )+' 65 68)');
+        walkerArmL.setAttribute('transform','rotate('+( -angle/1.8 )+' 49 45)');
+        walkerArmR.setAttribute('transform','rotate('+( angle/1.8 )+' 71 45)');
+      }, 120);
+    }
+    function stopWalkerAnimation(){ clearInterval(walkerAnim); walkerLegL.setAttribute('transform','rotate(0 55 68)'); walkerLegR.setAttribute('transform','rotate(0 65 68)'); walkerArmL.setAttribute('transform','rotate(0 49 45)'); walkerArmR.setAttribute('transform','rotate(0 71 45)'); }
+
+    // Countdown overlay for big display
+    function showOverlay(n){
+      overlay.classList.add('show');
+      overlay.innerText = n;
+      overlay.setAttribute('aria-hidden','false');
+      if(overlayTimer) clearInterval(overlayTimer);
+      overlayTimer = setInterval(()=>{
+        if(n<=0){
+          overlay.classList.remove('show');
+          overlay.setAttribute('aria-hidden','true');
+          clearInterval(overlayTimer);
+        } else {
+          n--; overlay.innerText = n;
+        }
+      },1000);
+    }
+
+    // Full pedestrian flow: red -> green (ped) -> countdown -> red
+    async function pedestrianFlow(durationSec){
+      if(busy) return;
+      busy = true;
+      setState('red');
+      speak(langSelect.value.startsWith('es') ? 'Solicitud recibida. Espere por favor.' : 'Crossing requested. Please wait.');
+      beep(640,150,Number(volRange.value));
+      await delay(700);
+
+      // Turn green for pedestrians
+      setState('green');
+      startWalkerAnimation();
+      const vol = Number(volRange.value);
+      // optional tick sound each second and voice at intervals
+      showOverlay(durationSec);
+      for(let s=durationSec; s>0; s--){
+        counterNum.innerText = s;
+        if(s<=3) beep(1200,80,vol*0.6);
+        if(s%5===0 && s!==durationSec) speak((langSelect.value.startsWith('es') ? `${s} segundos restantes` : `${s} seconds remaining`));
+        await delay(1000);
+      }
+      // end
+      stopWalkerAnimation();
+      counterNum.innerText = '—';
+      beep(440,300,vol);
+      speak(langSelect.value.startsWith('es') ? 'Cruce finalizado' : 'Crossing finished');
+      setState('red');
+      busy = false;
+    }
+
+    // Smart (automated) mode simulating vehicle and pedestrian scheduling
+    async function smartSequence(){
+      if(busy) return;
+      busy = true;
+      // Example cycle: red(3s) -> green(pedDur) -> amber(3s) -> red ...
+      setState('red'); speak(langSelect.value.startsWith('es') ? 'Semáforo en rojo' : 'Traffic light is red'); await delay(1000);
+      const pedDur = Math.max(5, Math.min(30, Number(durInput.value || 12)));
+      await delay(1500);
+      setState('green'); startWalkerAnimation();
+      showOverlay(pedDur);
+      for(let s=pedDur; s>0; s--){
+        counterNum.innerText = s;
+        if(s<=3) beep(1200,80,Number(volRange.value)*0.6);
+        await delay(1000);
+      }
+      stopWalkerAnimation();
+      counterNum.innerText = '—';
+      setState('amber'); speak(langSelect.value.startsWith('es') ? 'Cambio a precaución' : 'Changing to caution');
+      await delay(3000);
+      setState('red');
+      speak(langSelect.value.startsWith('es') ? 'Semáforo en rojo' : 'Traffic light is red');
+      busy = false;
+    }
+
+    // Utilities
+    function delay(ms){ return new Promise(res=>setTimeout(res,ms)); }
+
+    // Event bindings
+    reqBtn.addEventListener('click', ()=> pedestrianFlow(Math.max(5, Math.min(30, Number(durInput.value || 12)))));
+    smartBtn.addEventListener('click', smartSequence);
+    stopBtn.addEventListener('click', ()=>{ busy=false; setState('red'); stopWalkerAnimation(); counterNum.innerText='—'; overlay.classList.remove('show'); });
+    testSound.addEventListener('click', ()=>{ beep(880,120,Number(volRange.value)); });
+    testVoice.addEventListener('click', ()=>{ speak(langSelect.value.startsWith('es') ? 'Prueba de voz' : 'Voice test'); });
+
+    // Physical button logic: press & hold ~1s to request, quick press toggles hint
+    let physDown = 0;
+    let physTimer = null;
+    physicalBtn.addEventListener('pointerdown', (e)=> {
+      physicalBtn.setAttribute('aria-pressed','true');
+      physDown = Date.now();
+      physicalBtn.classList.add('pressed');
+      physTimer = setTimeout(()=> {
+        // trigger request
+        physicalBtn.classList.add('activePulse');
+        pedestrianFlow(Math.max(5, Math.min(30, Number(durInput.value || 12))));
+      }, 800);
+    });
+    physicalBtn.addEventListener('pointerup', (e)=>{
+      physicalBtn.setAttribute('aria-pressed','false');
+      physicalBtn.classList.remove('pressed');
+      if(physTimer){ clearTimeout(physTimer); physTimer=null; }
+    });
+    physicalBtn.addEventListener('keyup', (e)=> { if(e.key==='Enter' || e.key===' ') pedestrianFlow(Math.max(5, Math.min(30, Number(durInput.value || 12)))) });
+
+    // Night mode auto based on hour or manual toggle
+    function applyNightMode(on){
+      const shell = document.getElementById('pageShell');
+      if(on) shell.classList.add('night'); else shell.classList.remove('night');
+      document.body.style.background = on ? 'var(--bg-night)' : 'var(--bg-day)';
+    }
+    // auto
+    const now = new Date();
+    const hour = now.getHours();
+    if(hour >= 19 || hour <= 6) { applyNightMode(true); nightToggle.checked = true; } else { applyNightMode(false); nightToggle.checked = false; }
+    nightToggle.addEventListener('change', ()=> applyNightMode(nightToggle.checked));
+
+    // Initial state
+    setState('red');
+    counterNum.innerText = '—';
+
+    // Accessibility: keyboard shortcuts
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'c') reqBtn.click(); // c -> cross
+      if(e.key === 's') smartBtn.click(); // s -> smart
+      if(e.key === ' ') { e.preventDefault(); physicalBtn.click(); } // space -> simulate press
+    });
+
+    // Ensure stable layout on mobile (explicit viewport and no horizontal scroll)
+    // Also prevent pinch-zoom on mobiles in presentation mode: (note: not recommended for accessibility but ok for demo)
+    // document.addEventListener('gesturestart', (e)=> e.preventDefault());
+
+    // Final: say ready in voice when loaded
+    window.addEventListener('load', ()=> {
+      setTimeout(()=> {
+        speak(langSelect.value.startsWith('es') ? 'Smart Cross listo para demo' : 'Smart Cross ready for demo');
+      }, 600);
+    });
+
+  </script>
+</body>
+</html>

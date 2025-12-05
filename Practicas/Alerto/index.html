@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ALERTO — Botón de Emergencia Silencioso (Prototipo Avanzado)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1: linear-gradient(180deg,#fff7f2 0%, #fff1e6 50%, #ffece0 100%);
+    --card: rgba(255,255,255,0.88);
+    --accent:#ff6b6b;
+    --accent-2:#ffb86b;
+    --muted:#64748b;
+    --glass: rgba(255,255,255,0.6);
+  }
+
+  /* Base */
+  html,body{ height:100%; margin:0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+  body{
+    background: linear-gradient(180deg,#f7f9fb 0%, #eef7fb 50%);
+    color:#04253a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    box-sizing:border-box;
+  }
+
+  /* Shell: fixed-width, responsive but locked layout */
+  .shell{
+    width:100%;
+    max-width:980px;
+    border-radius:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.92));
+    box-shadow: 0 30px 80px rgba(4,21,34,0.12);
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:18px;
+    padding:18px;
+    box-sizing:border-box;
+  }
+  @media (max-width:920px){
+    .shell{ grid-template-columns: 1fr; max-width:760px; padding:14px; gap:12px; }
+  }
+
+  /* Left - main */
+  .main {
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    align-items:stretch;
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .logo {
+    width:56px; height:56px; border-radius:12px;
+    background: linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-weight:700; font-size:20px; box-shadow: 0 10px 30px rgba(255,107,107,0.15);
+  }
+  .title { font-size:1.4rem; margin:0; font-weight:700; color:#062233; }
+  .desc { color:var(--muted); font-size:0.95rem; }
+
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.93));
+    padding:14px; border-radius:12px; box-shadow: 0 10px 24px rgba(6,30,54,0.04);
+  }
+
+  /* Hidden control icon (top-right) */
+  #hiddenBtn {
+    position: fixed;
+    right: 18px;
+    top: 18px;
+    width:52px; height:52px; border-radius:12px;
+    background: linear-gradient(135deg,#f6f6f8,#fff);
+    display:flex; align-items:center; justify-content:center;
+    border: 1px solid rgba(6,30,54,0.06);
+    box-shadow: 0 8px 18px rgba(6,30,54,0.06);
+    cursor:pointer; z-index:9999;
+  }
+  #hiddenBtn:active { transform: translateY(2px); }
+
+  /* Interactive area */
+  .hero {
+    display:flex; gap:14px; align-items:stretch;
+    flex-wrap:wrap;
+  }
+
+  .panel-left {
+    flex:1;
+    min-width:240px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+
+  .panel-right {
+    width:320px; min-width:220px;
+  }
+
+  .big-call {
+    background: linear-gradient(135deg,#fff 0%, #fff 40%);
+    border-radius:12px; padding:18px; display:flex; gap:12px; align-items:center;
+    box-shadow: 0 12px 30px rgba(6,30,54,0.05);
+  }
+  .call-text { font-weight:700; font-size:1.05rem; color:#062233; }
+  .call-sub { color:var(--muted); font-size:0.92rem; }
+
+  /* Simulated physical button */
+  .phys {
+    height:88px; border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: linear-gradient(180deg,#072434,#0a4c56);
+    color:#dffdf8; font-weight:800; font-size:1rem; text-align:center; box-shadow: 0 14px 40px rgba(2,40,48,0.22);
+    user-select:none; -webkit-user-select:none; cursor:pointer;
+  }
+  .phys.small { height:64px; font-size:0.95rem; }
+
+  .status-bar { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .status-label { font-weight:700; color:#de3b4a; }
+
+  /* Map card (SVG inline) */
+  .map {
+    width:100%; border-radius:12px; overflow:hidden; border:1px solid rgba(6,30,54,0.04);
+  }
+
+  /* Alert overlay - full-screen card inside container (not real fullscreen so mobile stable) */
+  .alert-screen {
+    display:none;
+    border-radius:12px;
+    padding:20px;
+    background: linear-gradient(180deg,#fff6f6,#fff2f2);
+    color:#2a0505;
+    box-shadow: 0 18px 60px rgba(10,10,10,0.12);
+  }
+  .alert-screen.show { display:block; animation: alertIn .28s ease; }
+  @keyframes alertIn { from{ transform:translateY(6px); opacity:0 } to{ transform:translateY(0); opacity:1 } }
+
+  .alert-title { font-size:1.25rem; font-weight:800; color:#7b1515; }
+  .alert-sub { color:#6b2b2b; margin-top:6px; font-size:0.95rem; }
+  .alert-actions { margin-top:12px; display:flex; gap:10px; }
+
+  .btn {
+    padding:12px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; font-size:0.95rem;
+  }
+  .btn.primary { background: linear-gradient(90deg,#ff6b6b,#ff9b6b); color:white; box-shadow: 0 10px 30px rgba(255,107,107,0.15); }
+  .btn.ghost { background:transparent; border:1px dashed rgba(6,30,54,0.06); color:#062233; }
+
+  /* Small footer */
+  .foot { font-size:0.85rem; color:var(--muted); text-align:center; padding:8px; }
+
+  /* accessibility hidden */
+  .sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+  /* Responsive tweaks to keep layout stable on mobile */
+  @media (max-width:600px){
+    #hiddenBtn { right:12px; top:12px; width:48px; height:48px; }
+    .shell{ padding:12px; gap:12px; }
+    .panel-right{ width:100%; order:2; }
+    .panel-left{ order:1; }
+    .phys{ height:76px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Hidden config icon (visible as small gear) -->
+  <button id="hiddenBtn" title="Ajustes" aria-label="Ajustes" tabindex="0">⚙</button>
+
+  <main class="shell" role="main" aria-labelledby="mainTitle">
+    <!-- LEFT -->
+    <section class="main" aria-labelledby="mainTitleArea">
+      <div class="brand">
+        <div class="logo">AL</div>
+        <div>
+          <h2 class="title" id="mainTitle">ALERTO</h2>
+          <div class="desc">Botón de emergencia silencioso — demo segura y simulada para presentaciones</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hero">
+          <div class="panel-left">
+            <div class="big-call">
+              <div style="flex:1">
+                <div class="call-text">Modo seguro</div>
+                <div class="call-sub">Toca el ícono de ajustes (⚙) 3 veces rápido o mantén presionado 1s para activar una alerta silenciosa.</div>
+              </div>
+              <div style="width:96px; display:flex; align-items:center; justify-content:center;">
+                <div style="width:80px; height:80px; border-radius:12px; background:linear-gradient(135deg,#fff,#fff); display:flex; align-items:center; justify-content:center; font-weight:800; color:#ff6b6b;">SOS</div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div class="status-bar">
+                <div>Estado</div>
+                <div class="status-label" id="statusText">Inactivo</div>
+              </div>
+              <div style="margin-top:8px; display:flex; gap:10px;">
+                <div style="flex:1" class="card">
+                  <div style="font-size:0.95rem; color:var(--muted)">Toques detectados</div>
+                  <div id="tapCount" style="font-weight:800; font-size:1.4rem; margin-top:6px;">0</div>
+                </div>
+                <div style="width:140px" class="card">
+                  <div style="font-size:0.95rem; color:var(--muted)">Última acción</div>
+                  <div id="lastAction" style="font-weight:700; margin-top:6px; color:#2a0505">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div class="phys" id="physBtn" tabindex="0" role="button" aria-pressed="false">PULSAR Y MANTENER</div>
+            </div>
+          </div>
+
+          <div class="panel-right">
+            <div class="card map" aria-hidden="false" role="img" aria-label="Mapa simulado">
+              <!-- Simple inline SVG map placeholder (no external requests) -->
+              <svg viewBox="0 0 600 300" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa simulado">
+                <rect width="100%" height="100%" fill="#f7f9fb"/>
+                <g transform="translate(20,20) scale(0.9)">
+                  <rect x="0" y="100" width="560" height="18" rx="3" fill="#e2e8f0"/>
+                  <rect x="0" y="50" width="560" height="36" rx="6" fill="#cfe8ff"/>
+                  <circle cx="80" cy="70" r="8" fill="#ff6b6b"/>
+                  <circle cx="220" cy="70" r="6" fill="#ffd08a"/>
+                  <circle cx="420" cy="120" r="8" fill="#ffd08a"/>
+                  <text x="18" y="30" font-size="18" fill="#334155" font-weight="700">Mapa (simulado)</text>
+                </g>
+              </svg>
+            </div>
+
+            <div style="margin-top:10px; display:flex; gap:8px;">
+              <button class="btn primary" id="simulateSend">Simular Enviar Ubicación</button>
+              <button class="btn ghost" id="cancelAlert">Cancelar</button>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div style="font-size:0.92rem; color:var(--muted)">Contacto de emergencia (simulado)</div>
+              <div style="margin-top:8px; display:flex; gap:8px;">
+                <div style="flex:1; padding:10px; border-radius:8px; background:#fff7f5; font-weight:700; color:#b33">Contacto A</div>
+                <div style="flex:1; padding:10px; border-radius:8px; background:#fff8e6; font-weight:700; color:#b36">Contacto B</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">Demo segura: la ubicación y el envío son simulados (no se comparte información real).</div>
+    </section>
+
+    <!-- RIGHT (panel de notificación y alertas) -->
+    <aside class="card alert-screen" id="alertBox" role="status" aria-live="assertive" aria-atomic="true">
+      <div class="alert-title">ALERTA ACTIVADA</div>
+      <div class="alert-sub">Se ha enviado una señal silenciosa a tus contactos de emergencia (simulado).</div>
+
+      <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+        <div style="flex:1">
+          <div style="font-size:0.95rem; color:var(--muted)">Ubicación (aprox.)</div>
+          <div id="sentLocation" style="font-weight:700; margin-top:6px;">Lat: --, Lon: --</div>
+        </div>
+        <div style="width:110px; text-align:center;">
+          <div style="font-size:0.85rem; color:var(--muted)">Tiempo</div>
+          <div id="alertTimer" style="font-weight:800; font-size:1.2rem; margin-top:6px;">00:30</div>
+        </div>
+      </div>
+
+      <div class="alert-actions">
+        <button class="btn ghost" id="dismissAlert">Cerrar</button>
+        <button class="btn primary" id="sosExtra">Enviar nuevamente</button>
+      </div>
+      <div style="margin-top:10px; color:#6b2b2b; font-size:0.9rem;">Nota: en un producto real, aquí se integraría SMS/APP/servicio. En el prototipo esto está simulado.</div>
+    </aside>
+  </main>
+
+<script>
+/* ALERTO - funcionalidad JS:
+   - Detección de 3 toques rápidos sobre #hiddenBtn
+   - Pulsar y mantener 1s sobre #physBtn para activar alerta
+   - Simulación de envío: muestra alertBox con datos simulados
+   - Countdown de alerta auto: 30s por defecto (configurable)
+   - Accesibilidad: aria-live y roles
+   - Mobile-friendly: layout locked, no elementos absolutos fuera de safe area
+*/
+
+const hiddenBtn = document.getElementById('hiddenBtn');
+const tapCountEl = document.getElementById('tapCount');
+const physBtn = document.getElementById('physBtn');
+const alertBox = document.getElementById('alertBox');
+const statusText = document.getElementById('statusText');
+const lastAction = document.getElementById('lastAction');
+const simulateBtn = document.getElementById('simulateSend');
+const dismissAlert = document.getElementById('dismissAlert');
+const sosExtra = document.getElementById('sosExtra');
+const sentLocation = document.getElementById('sentLocation');
+const alertTimer = document.getElementById('alertTimer');
+
+let taps = 0;
+let lastTapTime = 0;
+let alertInterval = null;
+let countdown = 30; // seconds default
+let physTimer = null;
+let sending = false;
+
+// Utility speak (optional low volume; by default silent demo uses visual)
+// Use only for demo; the alert is silent by default
+function speakDemo(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES';
+  u.volume = 0.6;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+// Tap detection: 3 taps within 700ms between taps
+hiddenBtn.addEventListener('click', ()=> {
+  const now = Date.now();
+  if(now - lastTapTime <= 700) taps++; else taps = 1;
+  lastTapTime = now;
+  tapCountEl.innerText = taps;
+  if(taps === 3) {
+    activateAlert('Activado por 3 toques');
+    taps = 0;
+    tapCountEl.innerText = 0;
+  }
+});
+
+// Keyboard activation for hiddenBtn
+hiddenBtn.addEventListener('keyup', (e)=> { if(e.key === 'Enter' || e.key === ' ') hiddenBtn.click(); });
+
+// Press and hold on physBtn: start timer and activate after 900ms
+physBtn.addEventListener('pointerdown', (e)=>{
+  physBtn.setAttribute('aria-pressed','true');
+  physBtn.classList.add('pressed');
+  physTimer = setTimeout(()=> {
+    activateAlert('Activado por pulsar y mantener');
+  }, 900);
+});
+physBtn.addEventListener('pointerup', (e)=>{
+  physBtn.setAttribute('aria-pressed','false');
+  physBtn.classList.remove('pressed');
+  if(physTimer){ clearTimeout(physTimer); physTimer = null; }
+});
+
+// Keyboard for physBtn
+physBtn.addEventListener('keyup', (e)=> { if(e.key === 'Enter' || e.key === ' ') activateAlert('Activado por teclado'); });
+
+// Activate alert: shows alert box, simulates sending location, starts countdown
+function activateAlert(reason){
+  if(sending) return; // avoid double
+  sending = true;
+  statusText.innerText = 'Alerta activada';
+  lastAction.innerText = reason;
+  // simulate obtaining approximate location (randomized demo values)
+  const lat = (19 + Math.random()*0.06).toFixed(5); // demo — near a city
+  const lon = (-99 + Math.random()*0.06).toFixed(5);
+  sentLocation.innerText = `Lat: ${lat}, Lon: ${lon}`;
+  // show alert box (keeps within layout, so mobile doesn't shift)
+  alertBox.classList.add('show');
+  // start countdown display (mm:ss)
+  countdown = 30;
+  updateTimerDisplay();
+  if(alertInterval) clearInterval(alertInterval);
+  alertInterval = setInterval(()=> {
+    countdown--;
+    updateTimerDisplay();
+    if(countdown <= 0){ clearInterval(alertInterval); alertInterval = null; finishAlert(); }
+  }, 1000);
+
+  // Visual subtle pulse on physBtn to indicate 'sent'
+  physBtn.style.boxShadow = '0 12px 30px rgba(255,107,107,0.18)';
+  // Optional: low beep for demo (very quiet)
+  //beep(800,80,0.06);
+
+  // Accessibility: announce via SR
+  announceSR('Alerta activada. Ubicación enviada (simulada).');
+
+  // simulate network send delay
+  setTimeout(()=> {
+    // show sent confirmation (simulated)
+    lastAction.innerText = 'Ubicación enviada (simulado)';
+  }, 600);
+}
+
+// Update countdown mm:ss
+function updateTimerDisplay(){
+  const mm = String(Math.floor(countdown / 60)).padStart(2,'0');
+  const ss = String(countdown % 60).padStart(2,'0');
+  alertTimer.innerText = `${mm}:${ss}`;
+}
+
+// Finish/auto-clear alert
+function finishAlert(){
+  alertBox.classList.remove('show');
+  statusText.innerText = 'Inactivo';
+  lastAction.innerText = 'Tiempo agotado';
+  sending = false;
+  physBtn.style.boxShadow = '';
+  announceSR('Alerta finalizada.');
+}
+
+// Dismiss button
+dismissAlert.addEventListener('click', ()=> {
+  if(alertInterval) { clearInterval(alertInterval); alertInterval = null; }
+  alertBox.classList.remove('show');
+  statusText.innerText = 'Cancelada';
+  lastAction.innerText = 'Canceló usuario';
+  sending = false;
+  physBtn.style.boxShadow = '';
+  announceSR('Alerta cancelada.');
+});
+
+// Re-send (simulated)
+sosExtra.addEventListener('click', ()=> {
+  if(!sending) return;
+  // restart countdown
+  countdown = 30;
+  updateTimerDisplay();
+  lastAction.innerText = 'Reenvío simulado';
+  announceSR('Alerta reenviada (simulado).');
+});
+
+// Simulate send location (button)
+simulateBtn.addEventListener('click', ()=> {
+  if(!sending) activateAlert('Enviado manual (simulado)');
+});
+
+// Simple SR announcer for accessibility
+function announceSR(text){
+  const sr = document.getElementById('srstatus');
+  if(!sr) return;
+  sr.innerText = text;
+  // Also speak softly (optional)
+  // speakDemo(text);
+}
+
+// small beep function (low volume, optional)
+function beep(freq=880, dur=80, vol=0.05){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.value = vol;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); ctx.close(); }, dur);
+  }catch(e){ /* ignore */ }
+}
+
+/* Prevent accidental double-activation on fast clicks */
+let lastActivation = 0;
+function safeActivate(reason){
+  const now = Date.now();
+  if(now - lastActivation < 1500) return;
+  lastActivation = now;
+  activateAlert(reason);
+}
+
+/* Initial states */
+tapCountEl.innerText = '0';
+statusText.innerText = 'Inactivo';
+lastAction.innerText = '—';
+updateTimerDisplay();
+
+// Safety: prevent page zooming causing layout jump is intentionally NOT disabled
+// (Better for accessibility). Layout has been designed to remain stable on small screens.
+
+/* Optional: Show short toast when loading to indicate mobile-ready */
+window.addEventListener('load', ()=> {
+  // small visual "ready" blink
+  setTimeout(()=> {
+    // brief highlight
+    hiddenBtn.animate([{opacity:1},{opacity:0.7},{opacity:1}], {duration:800, iterations:1});
+  }, 420);
+});
+
+/* Keep layout locked horizontally: avoid overflow */
+document.documentElement.style.overflowX = 'hidden';
+</script>
+
+</body>
+</html>
