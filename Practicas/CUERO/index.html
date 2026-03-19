@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CueroTech | Industria Premium</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+font-family: 'Poppins', sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
+color:white;
+}
+
+/* NAVBAR */
+header{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 60px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+header h1{
+color:#d4af37;
+font-weight:600;
+}
+
+nav a{
+color:white;
+margin-left:25px;
+text-decoration:none;
+transition:0.3s;
+font-size:15px;
+}
+
+nav a:hover{
+color:#d4af37;
+}
+
+/* HERO */
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+background:url("https://images.unsplash.com/photo-1520975916090-3105956dac38") center/cover;
+}
+
+.hero h2{
+font-size:60px;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:20px;
+max-width:650px;
+opacity:0.9;
+margin-bottom:30px;
+}
+
+.hero button{
+background:#d4af37;
+border:none;
+padding:15px 40px;
+font-size:18px;
+border-radius:30px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.hero button:hover{
+transform:scale(1.1);
+background:#b8962e;
+}
+
+/* SECCIONES */
+section{
+padding:120px 60px;
+text-align:center;
+}
+
+.titulo{
+font-size:42px;
+margin-bottom:50px;
+color:#d4af37;
+}
+
+/* CARDS */
+.contenedor{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:30px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+padding:30px;
+width:300px;
+border-radius:20px;
+transition:0.4s;
+}
+
+.card:hover{
+transform:translateY(-12px);
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+
+.card h3{
+color:#d4af37;
+margin-bottom:10px;
+}
+
+.card p{
+opacity:0.85;
+}
+
+/* PRODUCTOS */
+.producto{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:20px;
+transition:0.3s;
+}
+
+.producto:hover{
+transform:scale(1.08);
+}
+
+/* FORM */
+form{
+max-width:500px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+input, textarea{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#1a1a1a;
+color:white;
+}
+
+button.enviar{
+background:#d4af37;
+border:none;
+padding:12px;
+cursor:pointer;
+border-radius:20px;
+}
+
+button.enviar:hover{
+background:#b8962e;
+}
+
+/* BOTÓN SUBIR */
+#topBtn{
+position:fixed;
+bottom:30px;
+right:30px;
+background:#d4af37;
+border:none;
+padding:12px;
+border-radius:50%;
+cursor:pointer;
+display:none;
+}
+
+/* FOOTER */
+footer{
+background:#000;
+padding:30px;
+text-align:center;
+color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>CueroTech</h1>
+<nav>
+<a href="#inicio">Inicio</a>
+<a href="#servicios">Servicios</a>
+<a href="#productos">Productos</a>
+<a href="#contacto">Contacto</a>
+</nav>
+</header>
+
+<section class="hero" id="inicio">
+<h2>Excelencia en Cuero</h2>
+<p>Fabricación y distribución de cuero y químicos con estándares industriales premium.</p>
+<a href="#servicios"><button>Explorar</button></a>
+</section>
+
+<section id="servicios">
+<h2 class="titulo">Servicios</h2>
+
+<div class="contenedor">
+
+<div class="card">
+<h3>Fabricación</h3>
+<p>Procesos avanzados para cuero de alta calidad.</p>
+</div>
+
+<div class="card">
+<h3>Químicos</h3>
+<p>Productos especializados para curtido.</p>
+</div>
+
+<div class="card">
+<h3>Asesoría</h3>
+<p>Optimización de procesos industriales.</p>
+</div>
+
+</div>
+</section>
+
+<section id="productos">
+<h2 class="titulo">Productos</h2>
+
+<div class="contenedor">
+
+<div class="producto">
+<h3>Cuero Premium</h3>
+<p>Alta durabilidad.</p>
+</div>
+
+<div class="producto">
+<h3>Químicos</h3>
+<p>Certificación industrial.</p>
+</div>
+
+<div class="producto">
+<h3>Selladores</h3>
+<p>Protección avanzada.</p>
+</div>
+
+</div>
+</section>
+
+<section id="contacto">
+<h2 class="titulo">Contacto</h2>
+
+<form>
+<input type="text" placeholder="Nombre">
+<input type="email" placeholder="Correo">
+<textarea rows="4" placeholder="Mensaje"></textarea>
+<button class="enviar">Enviar</button>
+</form>
+
+</section>
+
+<footer>
+<p>© 2026 CueroTech | Diseño premium</p>
+</footer>
+
+<button id="topBtn" onclick="topFunction()">↑</button>
+
+<script>
+let btn = document.getElementById("topBtn");
+
+window.onscroll = function(){
+if(document.documentElement.scrollTop > 300){
+btn.style.display = "block";
+}else{
+btn.style.display = "none";
+}
+}
+
+function topFunction(){
+document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+</html>
