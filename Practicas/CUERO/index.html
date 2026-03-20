@@ -1,304 +1,1213 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CORTEX — Cuero & Química de Precisión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #0d0c0a;
+      --bg2:      #131210;
+      --bg3:      #1a1815;
+      --surface:  #1f1d19;
+      --gold:     #c9a84c;
+      --gold2:    #e8c97a;
+      --cream:    #f2ead8;
+      --warm:     #a89070;
+      --text:     #e8e0d0;
+      --muted:    #8a7d6a;
+      --line:     rgba(201,168,76,0.18);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Barlow', sans-serif;
+      --font-ui: 'Barlow Condensed', sans-serif;
+    }
 
-<title>CueroTech | Industria Premium</title>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    html { scroll-behavior: smooth; }
 
-<style>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-scroll-behavior:smooth;
-font-family: 'Poppins', sans-serif;
-}
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .4;
+    }
 
-body{
-background:linear-gradient(135deg,#0a0a0a,#1a1a1a);
-color:white;
-}
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: linear-gradient(to bottom, rgba(13,12,10,.95) 0%, transparent 100%);
+      backdrop-filter: blur(8px);
+      transition: background .4s;
+    }
+    nav.scrolled { background: rgba(13,12,10,.97); }
 
-/* NAVBAR */
-header{
-position:fixed;
-width:100%;
-top:0;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 60px;
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(10px);
-z-index:1000;
-}
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--cream); }
 
-header h1{
-color:#d4af37;
-font-weight:600;
-}
+    .nav-links {
+      display: flex;
+      gap: 2.4rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--warm);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--gold2); }
 
-nav a{
-color:white;
-margin-left:25px;
-text-decoration:none;
-transition:0.3s;
-font-size:15px;
-}
+    .nav-cta {
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: .55rem 1.4rem;
+      text-decoration: none;
+      transition: background .3s, color .3s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--bg); }
 
-nav a:hover{
-color:#d4af37;
-}
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 1.5px; background: var(--gold); display: block; transition: .3s; }
 
-/* HERO */
-.hero{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
-background:url("https://images.unsplash.com/photo-1520975916090-3105956dac38") center/cover;
-}
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 8rem;
+      overflow: hidden;
+    }
 
-.hero h2{
-font-size:60px;
-margin-bottom:20px;
-}
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1800&q=80');
+      background-size: cover;
+      background-position: center 30%;
+      transform: scale(1.06);
+      animation: heroZoom 12s ease-out forwards;
+    }
+    @keyframes heroZoom { to { transform: scale(1); } }
 
-.hero p{
-font-size:20px;
-max-width:650px;
-opacity:0.9;
-margin-bottom:30px;
-}
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(13,12,10,.88) 45%, rgba(13,12,10,.3) 100%),
+                  linear-gradient(to top, rgba(13,12,10,.75) 0%, transparent 50%);
+    }
 
-.hero button{
-background:#d4af37;
-border:none;
-padding:15px 40px;
-font-size:18px;
-border-radius:30px;
-cursor:pointer;
-transition:0.3s;
-}
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding-left: 8rem;
+      max-width: 720px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp .9s .4s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-.hero button:hover{
-transform:scale(1.1);
-background:#b8962e;
-}
+    .hero-tag {
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
 
-/* SECCIONES */
-section{
-padding:120px 60px;
-text-align:center;
-}
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 1.6rem;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold2);
+    }
 
-.titulo{
-font-size:42px;
-margin-bottom:50px;
-color:#d4af37;
-}
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--warm);
+      max-width: 480px;
+      margin-bottom: 2.8rem;
+    }
 
-/* CARDS */
-.contenedor{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:30px;
-}
+    .hero-actions { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
 
-.card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-padding:30px;
-width:300px;
-border-radius:20px;
-transition:0.4s;
-}
+    .btn-primary {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--bg);
+      padding: .9rem 2.4rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background .3s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); }
 
-.card:hover{
-transform:translateY(-12px);
-box-shadow:0 10px 40px rgba(0,0,0,0.6);
-}
+    .btn-outline {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--cream);
+      border-bottom: 1px solid var(--warm);
+      padding-bottom: .2rem;
+      text-decoration: none;
+      transition: color .3s, border-color .3s;
+    }
+    .btn-outline:hover { color: var(--gold2); border-color: var(--gold2); }
 
-.card h3{
-color:#d4af37;
-margin-bottom:10px;
-}
+    .hero-scroll {
+      position: absolute;
+      bottom: 3rem; right: 4rem;
+      z-index: 2;
+      writing-mode: vertical-rl;
+      font-family: var(--font-ui);
+      font-size: .65rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      opacity: 0;
+      animation: fadeUp .9s 1s forwards;
+    }
+    .hero-scroll::after { content: ''; width: 1px; height: 50px; background: var(--gold); animation: lineGrow 1.5s 1.5s ease forwards; transform-origin: top; transform: scaleY(0); }
+    @keyframes lineGrow { to { transform: scaleY(1); } }
 
-.card p{
-opacity:0.85;
-}
+    /* ── DIVIDER ── */
+    .gold-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: .35;
+    }
 
-/* PRODUCTOS */
-.producto{
-background:rgba(255,255,255,0.05);
-padding:25px;
-border-radius:20px;
-transition:0.3s;
-}
+    /* ── SECTION BASE ── */
+    section { padding: 7rem 8rem; }
+    .section-tag {
+      font-family: var(--font-ui);
+      font-size: .68rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .section-tag::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
 
-.producto:hover{
-transform:scale(1.08);
-}
+    h2.section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.2;
+    }
+    h2.section-title em { font-style: italic; color: var(--gold2); }
 
-/* FORM */
-form{
-max-width:500px;
-margin:auto;
-display:flex;
-flex-direction:column;
-gap:15px;
-}
+    /* ── ABOUT ── */
+    .about {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
 
-input, textarea{
-padding:12px;
-border:none;
-border-radius:10px;
-background:#1a1a1a;
-color:white;
-}
+    .about-img-wrap {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+    }
+    .about-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .8s ease;
+    }
+    .about-img-wrap:hover img { transform: scale(1.04); }
 
-button.enviar{
-background:#d4af37;
-border:none;
-padding:12px;
-cursor:pointer;
-border-radius:20px;
-}
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      top: -1.5rem; left: -1.5rem;
+      width: 60%; height: 60%;
+      border-top: 1px solid var(--gold);
+      border-left: 1px solid var(--gold);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .about-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5rem; right: -1.5rem;
+      width: 60%; height: 60%;
+      border-bottom: 1px solid var(--gold);
+      border-right: 1px solid var(--gold);
+      pointer-events: none;
+    }
 
-button.enviar:hover{
-background:#b8962e;
-}
+    .about-text { padding-right: 2rem; }
+    .about-text p {
+      color: var(--warm);
+      line-height: 1.9;
+      font-size: .97rem;
+      margin-top: 1.4rem;
+    }
 
-/* BOTÓN SUBIR */
-#topBtn{
-position:fixed;
-bottom:30px;
-right:30px;
-background:#d4af37;
-border:none;
-padding:12px;
-border-radius:50%;
-cursor:pointer;
-display:none;
-}
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--line);
+      padding-top: 2rem;
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-ui);
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: .3rem;
+    }
 
-/* FOOTER */
-footer{
-background:#000;
-padding:30px;
-text-align:center;
-color:#aaa;
-}
+    /* ── PRODUCTS ── */
+    .products { background: var(--bg); }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      margin-top: 4rem;
+    }
 
-</style>
+    .product-card {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .product-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+      filter: brightness(.7);
+    }
+    .product-card:hover img { transform: scale(1.07); filter: brightness(.5); }
 
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,12,10,.9) 30%, transparent 70%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2.2rem;
+      transition: background .4s;
+    }
+    .product-card:hover .product-overlay {
+      background: linear-gradient(to top, rgba(13,12,10,.96) 40%, rgba(13,12,10,.3) 100%);
+    }
+
+    .product-cat {
+      font-family: var(--font-ui);
+      font-size: .65rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.2;
+    }
+    .product-desc {
+      font-size: .82rem;
+      color: var(--warm);
+      line-height: 1.7;
+      margin-top: .7rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .4s;
+      opacity: 0;
+    }
+    .product-card:hover .product-desc { max-height: 100px; opacity: 1; }
+
+    .product-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 1rem;
+      text-decoration: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .4s .1s;
+      opacity: 0;
+    }
+    .product-link::after { content: '→'; }
+    .product-card:hover .product-link { max-height: 50px; opacity: 1; }
+
+    /* ── PROCESS ── */
+    .process {
+      background: var(--bg3);
+      position: relative;
+      overflow: hidden;
+    }
+    .process::before {
+      content: 'PROCESO';
+      position: absolute;
+      right: -2rem; top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: var(--font-display);
+      font-size: 12rem;
+      font-weight: 600;
+      color: rgba(201,168,76,.04);
+      letter-spacing: .05em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .process-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 5rem;
+    }
+    .process-header p {
+      max-width: 380px;
+      color: var(--warm);
+      font-size: .95rem;
+      line-height: 1.8;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .step {
+      padding: 2.5rem 2rem;
+      border-left: 1px solid var(--line);
+      position: relative;
+      transition: background .3s;
+    }
+    .step:hover { background: rgba(201,168,76,.04); }
+    .step:last-child { border-right: 1px solid var(--line); }
+
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 600;
+      color: rgba(201,168,76,.15);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color .3s;
+    }
+    .step:hover .step-num { color: rgba(201,168,76,.35); }
+
+    .step-icon {
+      width: 44px; height: 44px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      color: var(--gold);
+      font-size: 1.2rem;
+      transition: border-color .3s, background .3s;
+    }
+    .step:hover .step-icon { border-color: var(--gold); background: rgba(201,168,76,.08); }
+
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: .6rem;
+    }
+    .step p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ── CHEMICALS BANNER ── */
+    .chemicals-banner {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .chem-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(.35);
+    }
+    .chem-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(13,12,10,.85) 40%, transparent 100%);
+    }
+    .chem-content {
+      position: relative;
+      z-index: 2;
+      padding: 6rem 8rem;
+      max-width: 620px;
+    }
+    .chem-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 1.4rem;
+    }
+    .chem-content h2 em { font-style: italic; color: var(--gold2); }
+    .chem-content p {
+      color: var(--warm);
+      font-size: .96rem;
+      line-height: 1.85;
+      margin-bottom: 2.2rem;
+    }
+
+    /* Chemical products chips */
+    .chem-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 2.5rem;
+    }
+    .chip {
+      font-family: var(--font-ui);
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      border: 1px solid rgba(201,168,76,.3);
+      color: var(--gold);
+      padding: .4rem 1rem;
+      transition: background .3s, border-color .3s;
+    }
+    .chip:hover { background: rgba(201,168,76,.1); border-color: var(--gold); }
+
+    /* ── GALLERY STRIP ── */
+    .gallery-strip {
+      background: var(--bg);
+      padding: 5rem 0;
+      overflow: hidden;
+    }
+    .gallery-strip-header {
+      padding: 0 8rem 3rem;
+    }
+    .strip-track {
+      display: flex;
+      gap: 1.5px;
+      animation: stripScroll 30s linear infinite;
+      width: max-content;
+    }
+    @keyframes stripScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .strip-track:hover { animation-play-state: paused; }
+
+    .strip-img {
+      width: 320px;
+      height: 220px;
+      object-fit: cover;
+      flex-shrink: 0;
+      filter: grayscale(.3) brightness(.8);
+      transition: filter .4s;
+    }
+    .strip-img:hover { filter: grayscale(0) brightness(1); }
+
+    /* ── CERTIFICATIONS ── */
+    .certs {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .certs-left {
+      padding: 7rem 5rem 7rem 8rem;
+      border-right: 1px solid var(--line);
+    }
+    .certs-right {
+      padding: 7rem 8rem 7rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .cert-list { margin-top: 3rem; }
+    .cert-item {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--line);
+      transition: padding-left .3s;
+    }
+    .cert-item:hover { padding-left: .5rem; }
+    .cert-icon {
+      width: 40px; height: 40px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      transition: border-color .3s;
+    }
+    .cert-item:hover .cert-icon { border-color: var(--gold); }
+    .cert-info {}
+    .cert-name {
+      font-family: var(--font-ui);
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--cream);
+      font-weight: 500;
+    }
+    .cert-desc {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+
+    .certs-img {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .certs-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(.65);
+      transition: transform .6s ease, filter .4s;
+    }
+    .certs-img:hover img { transform: scale(1.04); filter: brightness(.8); }
+    .certs-img-caption {
+      position: absolute;
+      bottom: 2rem; left: 2rem;
+      right: 2rem;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.3;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: var(--bg3);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .contact-left p {
+      color: var(--warm);
+      line-height: 1.9;
+      font-size: .96rem;
+      margin-top: 1.4rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .contact-info-icon {
+      color: var(--gold);
+      font-size: 1rem;
+      margin-top: .15rem;
+      flex-shrink: 0;
+    }
+    .contact-info-text {
+      font-size: .88rem;
+      color: var(--warm);
+      line-height: 1.6;
+    }
+    .contact-info-label {
+      font-family: var(--font-ui);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: .2rem;
+    }
+
+    .contact-form {}
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      padding: .85rem 1rem;
+      outline: none;
+      transition: border-color .3s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .btn-submit {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      padding: 1rem 3rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background .3s, transform .2s;
+      width: 100%;
+      margin-top: .5rem;
+    }
+    .btn-submit:hover { background: var(--gold2); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      padding: 3.5rem 8rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 2rem;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      color: var(--gold);
+    }
+    .footer-logo span { color: var(--cream); }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--font-ui);
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-right {
+      text-align: right;
+    }
+    .footer-copy {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: .8rem;
+    }
+    .footer-social a {
+      width: 32px; height: 32px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .8rem;
+      text-decoration: none;
+      transition: border-color .3s, color .3s;
+    }
+    .footer-social a:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.8rem; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      section { padding: 4.5rem 1.8rem; }
+      .hero-content { padding-left: 1.8rem; padding-right: 1.8rem; }
+      .hero-scroll { display: none; }
+
+      .about { grid-template-columns: 1fr; gap: 3rem; }
+      .about-text { padding-right: 0; }
+      .products-grid { grid-template-columns: 1fr; }
+      .process-header { flex-direction: column; gap: 1.2rem; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 1.5px; }
+      .step:last-child { border-right: none; }
+      .chem-content { padding: 4rem 1.8rem; }
+      .certs { grid-template-columns: 1fr; }
+      .certs-left { padding: 4rem 1.8rem; border-right: none; border-bottom: 1px solid var(--line); }
+      .certs-right { padding: 4rem 1.8rem; }
+      .contact { grid-template-columns: 1fr; gap: 3.5rem; padding: 4.5rem 1.8rem; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.8rem; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+      .footer-right { text-align: left; }
+      .footer-social { justify-content: flex-start; }
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>CueroTech</h1>
-<nav>
-<a href="#inicio">Inicio</a>
-<a href="#servicios">Servicios</a>
-<a href="#productos">Productos</a>
-<a href="#contacto">Contacto</a>
-</nav>
-</header>
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a class="nav-logo" href="#"><span>PIELES </span>SANTORO</a>
+    <ul class="nav-links">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="#quimicos">Químicos</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a class="nav-cta" href="#contacto">Cotizar</a>
+    <div class="hamburger" id="ham">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
 
-<section class="hero" id="inicio">
-<h2>Excelencia en Cuero</h2>
-<p>Fabricación y distribución de cuero y químicos con estándares industriales premium.</p>
-<a href="#servicios"><button>Explorar</button></a>
-</section>
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-tag">Excelencia en cuero &amp; química industrial</p>
+      <h1>Fabricamos el <em>carácter</em><br>de cada pieza</h1>
+      <p class="hero-desc">Más de 30 años transformando pieles de la más alta calidad y desarrollando soluciones químicas especializadas para la industria del cuero en México y el mundo.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#productos">Ver productos</a>
+        <a class="btn-outline" href="#proceso">Conocer proceso</a>
+      </div>
+    </div>
+    <div class="hero-scroll">Desplazar</div>
+  </section>
 
-<section id="servicios">
-<h2 class="titulo">Servicios</h2>
+  <div class="gold-divider"></div>
 
-<div class="contenedor">
+  <!-- ABOUT -->
+  <section class="about" id="nosotros">
+    <div class="about-img-wrap reveal">
+      <img src="https://images.unsplash.com/photo-1501127122-f385ca6ddd9d?w=900&q=80" alt="Fabricación de cuero de alta calidad" loading="lazy" />
+    </div>
+    <div class="about-text reveal">
+      <p class="section-tag">Nuestra esencia</p>
+      <h2 class="section-title">Tradición artesanal respaldada por <em>tecnología de vanguardia</em></h2>
+      <p>Somos una empresa mexicana especializada en la producción de cuero premium y la formulación de productos químicos para la industria curtidora. Cada pieza que sale de nuestras instalaciones lleva consigo décadas de conocimiento y un compromiso inquebrantable con la calidad.</p>
+      <p>Nuestro equipo de ingenieros y técnicos trabaja de la mano con los mejores productores para garantizar que tanto nuestros cueros como nuestros insumos químicos cumplan con los más altos estándares internacionales.</p>
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-num">30+</span>
+          <span class="stat-label">Años de experiencia</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">120+</span>
+          <span class="stat-label">Clientes activos</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">18</span>
+          <span class="stat-label">Países de exportación</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="card">
-<h3>Fabricación</h3>
-<p>Procesos avanzados para cuero de alta calidad.</p>
-</div>
+  <div class="gold-divider"></div>
 
-<div class="card">
-<h3>Químicos</h3>
-<p>Productos especializados para curtido.</p>
-</div>
+  <!-- PRODUCTS -->
+  <section class="products" id="productos">
+    <div class="section-tag reveal">Catálogo</div>
+    <h2 class="section-title reveal">Líneas de <em>producto</em></h2>
 
-<div class="card">
-<h3>Asesoría</h3>
-<p>Optimización de procesos industriales.</p>
-</div>
+    <div class="products-grid">
 
-</div>
-</section>
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1548863227-3af567fc3b27?w=700&q=80" alt="Cuero vacuno premium" loading="lazy" />
+        <div class="product-overlay">
+          <p class="product-cat">Línea cuero</p>
+          <h3 class="product-name">Cuero Vacuno<br>Premium</h3>
+          <p class="product-desc">Pieles de res seleccionadas con plena flor, teñidas en tambor y acabadas con lacas de máxima durabilidad para calzado, marroquinería y tapicería.</p>
+          <a class="product-link" href="#contacto">Solicitar muestra</a>
+        </div>
+      </div>
 
-<section id="productos">
-<h2 class="titulo">Productos</h2>
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=700&q=80" alt="Cuero pigmentado para calzado" loading="lazy" />
+        <div class="product-overlay">
+          <p class="product-cat">Línea calzado</p>
+          <h3 class="product-name">Cuero<br>Pigmentado</h3>
+          <p class="product-desc">Acabados uniformes de alta solidez para la industria zapatera. Disponible en más de 80 colores de temporada con entrega inmediata.</p>
+          <a class="product-link" href="#contacto">Solicitar muestra</a>
+        </div>
+      </div>
 
-<div class="contenedor">
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=700&q=80" alt="Cuero para tapicería de interiores" loading="lazy" />
+        <div class="product-overlay">
+          <p class="product-cat">Línea tapicería</p>
+          <h3 class="product-name">Cuero de<br>Interiores</h3>
+          <p class="product-desc">Pieles de gran área con propiedades ignífugas y resistencia UV para la industria automotriz y mobiliario de alto diseño.</p>
+          <a class="product-link" href="#contacto">Solicitar muestra</a>
+        </div>
+      </div>
 
-<div class="producto">
-<h3>Cuero Premium</h3>
-<p>Alta durabilidad.</p>
-</div>
+    </div>
+  </section>
 
-<div class="producto">
-<h3>Químicos</h3>
-<p>Certificación industrial.</p>
-</div>
+  <!-- PROCESS -->
+  <section class="process" id="proceso">
+    <div class="process-header reveal">
+      <div>
+        <p class="section-tag">Cómo trabajamos</p>
+        <h2 class="section-title">Procesos que<br><em>perfeccionan</em></h2>
+      </div>
+      <p>Cada etapa de nuestro proceso productivo está diseñada para maximizar la calidad del producto final, con controles estrictos y trazabilidad total en cada lote.</p>
+    </div>
 
-<div class="producto">
-<h3>Selladores</h3>
-<p>Protección avanzada.</p>
-</div>
+    <div class="process-steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">&#9670;</div>
+        <h3>Selección de materia prima</h3>
+        <p>Elegimos únicamente pieles certificadas de origen trazable, con estrictos criterios de calidad y bienestar animal.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">&#10022;</div>
+        <h3>Ribera &amp; curtición</h3>
+        <p>Procesos de ribera optimizados con química de bajo impacto ambiental. Curtición vegetal, mineral y combinada según especificación.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">&#9670;</div>
+        <h3>Acabado &amp; tintura</h3>
+        <p>Más de 200 acabados disponibles: aniline, semi-aniline, pigmentado, pull-up, nubuck, metalizado y barniz. Tintura en tambor con productos propios.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-icon">&#10022;</div>
+        <h3>Control de calidad</h3>
+        <p>Laboratorio propio con pruebas físicas y químicas según normas ASTM, ISO e IULTCS. Resultados entregados con cada lote.</p>
+      </div>
+    </div>
+  </section>
 
-</div>
-</section>
+  <!-- CHEMICALS BANNER -->
+  <div class="chemicals-banner" id="quimicos">
+    <div class="chem-bg"></div>
+    <div class="chem-content reveal">
+      <p class="section-tag">Línea química</p>
+      <h2>Insumos químicos de <em>precisión industrial</em></h2>
+      <p>Desarrollamos y distribuimos una línea completa de productos químicos formulados específicamente para el proceso curtidor: agentes de ribera, auxiliares de curtición, recurtientes, engrasantes y productos de acabado con desempeño comprobado.</p>
+      <div class="chem-chips">
+        <span class="chip">Sulfuro de sodio</span>
+        <span class="chip">Cal procesada</span>
+        <span class="chip">Cromo III</span>
+        <span class="chip">Ácidos orgánicos</span>
+        <span class="chip">Engrasantes sintéticos</span>
+        <span class="chip">Ligantes acrílicos</span>
+        <span class="chip">Lacas de acabado</span>
+        <span class="chip">Recurtientes vegetales</span>
+      </div>
+      <a class="btn-primary" href="#contacto">Solicitar ficha técnica</a>
+    </div>
+  </div>
 
-<section id="contacto">
-<h2 class="titulo">Contacto</h2>
+  <!-- GALLERY STRIP -->
+  <div class="gallery-strip">
+    <div class="gallery-strip-header reveal">
+      <p class="section-tag">Instalaciones</p>
+      <h2 class="section-title">Planta de clase <em>mundial</em></h2>
+    </div>
+    <div class="strip-track" id="stripTrack">
+      <img class="strip-img" src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&q=75" alt="Planta industrial" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=600&q=75" alt="Proceso de curtido" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=600&q=75" alt="Laboratorio químico" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=75" alt="Control de calidad" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1553279766-49939a342a6e?w=600&q=75" alt="Acabado de pieles" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&q=75" alt="Planta industrial" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=600&q=75" alt="Proceso de curtido" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=600&q=75" alt="Laboratorio químico" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=75" alt="Control de calidad" loading="lazy" />
+      <img class="strip-img" src="https://images.unsplash.com/photo-1553279766-49939a342a6e?w=600&q=75" alt="Acabado de pieles" loading="lazy" />
+    </div>
+  </div>
 
-<form>
-<input type="text" placeholder="Nombre">
-<input type="email" placeholder="Correo">
-<textarea rows="4" placeholder="Mensaje"></textarea>
-<button class="enviar">Enviar</button>
-</form>
+  <!-- CERTIFICATIONS -->
+  <section class="certs">
+    <div class="certs-left reveal">
+      <p class="section-tag">Calidad certificada</p>
+      <h2 class="section-title">Respaldados por<br><em>organismos internacionales</em></h2>
+      <div class="cert-list">
+        <div class="cert-item">
+          <div class="cert-icon">✦</div>
+          <div class="cert-info">
+            <span class="cert-name">ISO 9001:2015</span>
+            <p class="cert-desc">Sistema de gestión de calidad en todos nuestros procesos productivos.</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">✦</div>
+          <div class="cert-info">
+            <span class="cert-name">ISO 14001:2015</span>
+            <p class="cert-desc">Gestión ambiental y reducción de impacto en procesos de curtición.</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">✦</div>
+          <div class="cert-info">
+            <span class="cert-name">Leather Working Group</span>
+            <p class="cert-desc">Certificación de sostenibilidad y trazabilidad en la cadena de suministro.</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">✦</div>
+          <div class="cert-info">
+            <span class="cert-name">REACH Compliance</span>
+            <p class="cert-desc">Todos nuestros productos químicos cumplen la normativa europea de sustancias químicas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="certs-right">
+      <div class="certs-img reveal">
+        <img src="https://images.unsplash.com/photo-1581093458791-9d42e3c1fd8f?w=800&q=80" alt="Laboratorio de control de calidad" loading="lazy" />
+        <div class="certs-img-caption">Calidad que se ve, <em>se siente</em> y se certifica.</div>
+      </div>
+    </div>
+  </section>
 
-</section>
+  <!-- CONTACT -->
+  <section class="contact" id="contacto">
+    <div class="contact-left reveal">
+      <p class="section-tag">Contáctenos</p>
+      <h2 class="section-title">Hablemos de su <em>proyecto</em></h2>
+      <p>Estamos listos para asesorarlo en la selección del cuero ideal o en el desarrollo de formulaciones químicas a la medida de sus procesos. Cuéntenos sus necesidades.</p>
+      <div class="contact-info-item">
+        <span class="contact-info-icon">◆</span>
+        <div class="contact-info-text">
+          <span class="contact-info-label">Dirección</span>
+          Av. Industriales 450, Zona Industrial<br>León, Guanajuato, México
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-icon">◆</span>
+        <div class="contact-info-text">
+          <span class="contact-info-label">Teléfono</span>
+          +52 (477) 555 0100
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-icon">◆</span>
+        <div class="contact-info-text">
+          <span class="contact-info-label">Email</span>
+          ventas@cuerocortex.mx
+        </div>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" placeholder="Su nombre completo" />
+        </div>
+        <div class="form-group">
+          <label>Empresa</label>
+          <input type="text" placeholder="Nombre de la empresa" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" placeholder="correo@empresa.com" />
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" placeholder="+52 (477) 000 0000" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Área de interés</label>
+        <select>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option>Cuero para calzado</option>
+          <option>Cuero para tapicería</option>
+          <option>Cuero para marroquinería</option>
+          <option>Productos químicos para curtición</option>
+          <option>Asesoría técnica</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mensaje</label>
+        <textarea placeholder="Describa brevemente su necesidad o proyecto..."></textarea>
+      </div>
+      <button class="btn-submit" type="button">Enviar solicitud</button>
+    </div>
+  </section>
 
-<footer>
-<p>© 2026 CueroTech | Diseño premium</p>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo"><span>PIELES </span>SANTORO</div>
+    <ul class="footer-links">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="#quimicos">Químicos</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <div class="footer-right">
+      <p class="footer-copy">© 2026 Pieles Santoro. Todos los derechos reservados.</p>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">in</a>
+        <a href="#" title="LinkedIn">li</a>
+        <a href="#" title="WhatsApp">W</a>
+      </div>
+    </div>
+  </footer>
 
-<button id="topBtn" onclick="topFunction()">↑</button>
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
 
-<script>
-let btn = document.getElementById("topBtn");
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
 
-window.onscroll = function(){
-if(document.documentElement.scrollTop > 300){
-btn.style.display = "block";
-}else{
-btn.style.display = "none";
-}
-}
-
-function topFunction(){
-document.documentElement.scrollTop = 0;
-}
-</script>
-
+    // Mobile menu toggle (simple)
+    const ham = document.getElementById('ham');
+    const navLinks = document.querySelector('.nav-links');
+    ham.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+  </script>
 </body>
 </html>
