@@ -1095,10 +1095,6 @@ body {
     padding-right: 1.5rem !important;
   }
 
-  .strip-track {
-    width: auto !important;
-  }
-
   .hero,
   .certs,
   .about,
@@ -1130,7 +1126,11 @@ body {
     width: 260px;
     height: 180px;
   }
-
+}
+@media (max-width: 900px) {
+  .strip-track {
+    animation: stripScroll 10s linear infinite;
+  }
 }
 
   </style>
