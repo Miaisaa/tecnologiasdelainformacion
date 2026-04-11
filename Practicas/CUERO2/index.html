@@ -106,7 +106,7 @@
     /* ── HERO ── */
     .hero {
       position: relative;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: flex-end;
       padding-bottom: 8rem;
@@ -1039,6 +1039,10 @@
     display: none;
   }
 }
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
   </style>
 </head>
 <body>
@@ -1416,7 +1420,15 @@
     const navLinks = document.querySelector('.nav-links');
     ham.addEventListener('click', () => {
       navLinks.classList.toggle("active");
-});
+      });
+
+    window.addEventListener("orientationchange", () => {
+    document.body.style.display = "none";
+    setTimeout(() => {
+    document.body.style.display = "";
+    }, 10);
+    });
+
   </script>
 </body>
 </html>
