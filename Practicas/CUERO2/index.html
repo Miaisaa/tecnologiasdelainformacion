@@ -1048,6 +1048,23 @@ html, body {
   height: 60px;
   object-fit: contain;
 }
+.certs {
+  align-items: stretch;
+}
+
+.certs-right,
+.certs-left {
+  height: auto;
+}
+
+.hero {
+  min-height: 100dvh;
+}
+
+section {
+  min-height: auto;
+}
+
   </style>
 </head>
 <body>
@@ -1429,12 +1446,13 @@ html, body {
       navLinks.classList.toggle("active");
       });
 
-    window.addEventListener("orientationchange", () => {
-    document.body.style.display = "none";
-    setTimeout(() => {
-    document.body.style.display = "";
-    }, 10);
-    });
+    window.addEventListener("resize", () => {
+  document.body.style.overflow = "hidden";
+  
+  setTimeout(() => {
+    document.body.style.overflow = "";
+  }, 50);
+});
 
   </script>
 </body>
