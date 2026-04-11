@@ -1063,7 +1063,7 @@ html, body {
 
 .hero {
   position: relative;
-  min-height: calc(var(--vh) * 100);
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding: 6rem 2rem;
@@ -1072,6 +1072,40 @@ html, body {
 
 section {
   min-height: auto;
+}
+/* 🔥 FIX GLOBAL PARA ROTACIÓN EN MÓVILES */
+* {
+  max-width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@media (max-width: 900px) {
+
+  section {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  .certs-left,
+  .certs-right {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  .strip-track {
+    width: auto !important;
+  }
+
+  .hero,
+  .certs,
+  .about,
+  .contact {
+    width: 100%;
+  }
+
 }
 
   </style>
