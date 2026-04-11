@@ -575,7 +575,7 @@
     .strip-track {
       display: flex;
       gap: 5px;
-      animation: stripScroll 45s linear infinite;
+      animation: stripScroll 20s linear infinite;
       width: max-content;
     }
     @keyframes stripScroll {
@@ -1121,6 +1121,14 @@ body {
 
   .certs-left {
     border-right: none;
+  }
+
+}
+@media (max-width: 900px) {
+
+  .strip-img {
+    width: 260px;
+    height: 180px;
   }
 
 }
