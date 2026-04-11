@@ -943,8 +943,8 @@
 
   .hero {
     height: auto;
-    padding-top: 6rem;
-    padding-bottom: 4rem;
+    padding-top: 5rem;
+    padding-bottom: 3rem;
   }
 
   .hero-content {
@@ -997,11 +997,7 @@
   }
 
 }
-.hero {
-  min-height: auto;
-  padding-top: 5rem;
-  padding-bottom: 3rem;
-}
+
 /* ===== MENÚ RESPONSIVE ===== */
 .hamburger {
   display: none;
@@ -1067,10 +1063,10 @@ html, body {
 
 .hero {
   position: relative;
-  min-height: 100dvh;
+  min-height: calc(var(--vh) * 100);
   display: flex;
-  align-items: center; /* 🔥 CAMBIO CLAVE */
-  padding: 6rem 2rem; /* 🔥 en lugar de padding-bottom gigante */
+  align-items: center;
+  padding: 6rem 2rem;
   overflow: hidden;
 }
 
@@ -1459,13 +1455,13 @@ section {
       navLinks.classList.toggle("active");
       });
 
-    window.addEventListener("resize", () => {
-  document.body.style.overflow = "hidden";
-  
-  setTimeout(() => {
-    document.body.style.overflow = "";
-  }, 50);
-});
+   function fixHeight() {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+}
+
+fixHeight();
+window.addEventListener('resize', fixHeight);
+window.addEventListener('orientationchange', fixHeight);
 
   </script>
 </body>
