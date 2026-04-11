@@ -992,28 +992,7 @@
   nav {
     padding: 1rem 1.5rem;
   }
-@media (max-width: 768px) {
 
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    background: black;
-    position: absolute;
-    top: 70px; /* ajusta si tu navbar mide diferente */
-    left: 0;
-    width: 100%;
-    text-align: center;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .hamburger {
-    display: block;
-    cursor: pointer;
-  }
-}
 }
   </style>
 </head>
@@ -1030,7 +1009,7 @@
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <a class="nav-cta" href="#contacto">Cotizar</a>
-    <div class="hamburger" id="hamb">
+    <div class="hamburger" id="ham">
       <span></span><span></span><span></span>
     </div>
   </nav>
@@ -1387,12 +1366,12 @@
     }, { threshold: 0.12 });
     reveals.forEach(el => observer.observe(el));
 
-    const hamb = document.getElementById("hamb");
-const navLinks = document.querySelector(".nav-links");
-
-hamb.addEventListener("click", () => {
-  navLinks.classList.toggle("active");
-});
+    // Mobile menu toggle (simple)
+    const ham = document.getElementById('ham');
+    const navLinks = document.querySelector('.nav-links');
+    ham.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
   </script>
 </body>
 </html>
