@@ -1132,11 +1132,17 @@ body {
   }
 }
 .logo-santoro {
-  width: 300px;   
-  max-width: none;
+  width: 100%;
+  max-width: 450px;  /* tamaño máximo en compu */
   height: auto;
   display: block;
   margin: 3rem auto 0;
+}
+
+@media (max-width: 900px) {
+  .logo-santoro {
+    max-width: 280px;
+  }
 }
   </style>
 </head>
